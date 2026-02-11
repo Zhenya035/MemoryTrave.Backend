@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryTrave.Domain", "MemoryTrave.Domain\MemoryTrave.Domain.csproj", "{555E64B9-7D03-4072-B5E7-52839F002761}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryTrave.Application", "MemoryTrave.Application\MemoryTrave.Application.csproj", "{50D99412-37A4-4B6E-A249-C6F29740BE2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryTrave.Infrastructure", "MemoryTrave.Infrastructure\MemoryTrave.Infrastructure.csproj", "{F2A45D5B-4038-4653-A3A2-70A47ACFF482}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryTrave.Web", "MemoryTrave.Web\MemoryTrave.Web.csproj", "{429FC2ED-EDA3-4334-AC5A-5F820D599346}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{555E64B9-7D03-4072-B5E7-52839F002761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{555E64B9-7D03-4072-B5E7-52839F002761}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{555E64B9-7D03-4072-B5E7-52839F002761}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{555E64B9-7D03-4072-B5E7-52839F002761}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50D99412-37A4-4B6E-A249-C6F29740BE2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50D99412-37A4-4B6E-A249-C6F29740BE2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50D99412-37A4-4B6E-A249-C6F29740BE2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50D99412-37A4-4B6E-A249-C6F29740BE2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2A45D5B-4038-4653-A3A2-70A47ACFF482}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2A45D5B-4038-4653-A3A2-70A47ACFF482}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2A45D5B-4038-4653-A3A2-70A47ACFF482}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2A45D5B-4038-4653-A3A2-70A47ACFF482}.Release|Any CPU.Build.0 = Release|Any CPU
+		{429FC2ED-EDA3-4334-AC5A-5F820D599346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{429FC2ED-EDA3-4334-AC5A-5F820D599346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{429FC2ED-EDA3-4334-AC5A-5F820D599346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{429FC2ED-EDA3-4334-AC5A-5F820D599346}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
