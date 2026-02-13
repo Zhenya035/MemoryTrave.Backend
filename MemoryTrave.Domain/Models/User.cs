@@ -14,6 +14,10 @@ public class User
     
     public List<FriendRequest> FriendRequests { get; set; } = [];
     public List<Friendship> Friendships { get; set; } = [];
-    
+    public List<Guid> BlockedUsers { get; set; } = [];
+
     public List<Article> Articles { get; set; } = [];
+    
+    public DateTime? BanExpiresAt { get; set; } = null;
+    public bool IsBlocked => BanExpiresAt > DateTime.UtcNow;
 }
