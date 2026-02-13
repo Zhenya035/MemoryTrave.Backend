@@ -1,4 +1,6 @@
-﻿namespace MemoryTrave.Domain.Models;
+﻿using MemoryTrave.Domain.Enums;
+
+namespace MemoryTrave.Domain.Models;
 
 public class User
 {
@@ -8,6 +10,7 @@ public class User
     public string EmailHash { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
     public string PublicKey { get; set; } = string.Empty;
+    public RoleEnum Role { get; set; } = RoleEnum.User;
     
     public List<FriendRequest> FriendRequests { get; set; } = [];
     public List<Friendship> Friendships { get; set; } = [];
