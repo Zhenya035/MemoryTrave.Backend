@@ -15,12 +15,12 @@ public class FriendRequestConfiguration : IEntityTypeConfiguration<FriendRequest
         builder.HasOne(fr =>fr.FromUser)
             .WithMany(u => u.SentFriendRequests)
             .HasForeignKey(fr => fr.FromUserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasOne(fr => fr.ToUser)
             .WithMany(u => u.ReceivedFriendRequests)
             .HasForeignKey(fr => fr.ToUserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasIndex(fr => new { fr.FromUserId, fr.ToUserId }).IsUnique();
     }

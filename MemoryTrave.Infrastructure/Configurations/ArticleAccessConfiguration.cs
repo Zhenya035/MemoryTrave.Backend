@@ -17,7 +17,7 @@ public class ArticleAccessConfiguration : IEntityTypeConfiguration<ArticleAccess
         builder.HasOne(aa => aa.User)
             .WithMany(u => u.ArticleAccesses)
             .HasForeignKey(aa => aa.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasOne(aa => aa.Article)
             .WithMany(a => a.EncryptedKeys)

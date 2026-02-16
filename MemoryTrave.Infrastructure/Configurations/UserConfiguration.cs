@@ -22,17 +22,17 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasMany(u => u.SentFriendRequests)
             .WithOne(fr => fr.FromUser)
             .HasForeignKey(fr => fr.FromUserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasMany(u => u.ReceivedFriendRequests)
             .WithOne(fr => fr.ToUser)
             .HasForeignKey(fr => fr.ToUserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasMany(u => u.ArticleAccesses)
             .WithOne(aa => aa.User)
             .HasForeignKey(aa => aa.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasMany(u => u.Articles)
             .WithOne(a => a.Author)
