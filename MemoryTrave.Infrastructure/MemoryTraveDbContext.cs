@@ -1,4 +1,5 @@
 ﻿using MemoryTrave.Domain.Models;
+using MemoryTrave.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace MemoryTrave.Infrastructure;
@@ -11,4 +12,16 @@ public class MemoryTraveDbContext(DbContextOptions<MemoryTraveDbContext> options
     public DbSet<Friendship>  Friendships { get; set; }
     public DbSet<Location> Locations { get; set; }
     public DbSet<User> Users { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfiguration(new ArticleConfiguration());
+        modelBuilder.ApplyConfiguration(new ArticleAccessConfiguration());
+        modelBuilder.ApplyConfiguration(new FriendRequestConfiguration());
+        modelBuilder.ApplyConfiguration(new FriendshipConfiguration());
+        modelBuilder.ApplyConfiguration(new LocationConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        
+        base.OnModelCreating(modelBuilder);
+    }
 }
