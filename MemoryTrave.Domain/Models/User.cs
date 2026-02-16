@@ -12,9 +12,11 @@ public class User
     public string PublicKey { get; set; } = string.Empty;
     public RoleEnum Role { get; set; } = RoleEnum.User;
     
-    public List<FriendRequest> FriendRequests { get; set; } = [];
-    public List<Friendship> Friendships { get; set; } = [];
+    public List<FriendRequest> SentFriendRequests { get; set; } = [];
+    public List<FriendRequest> ReceivedFriendRequests { get; set; } = [];
+    
     public List<Guid> BlockedUsers { get; set; } = [];
+    public List<ArticleAccess> ArticleAccesses { get; set; } = [];
 
     public List<Article> Articles { get; set; } = [];
     

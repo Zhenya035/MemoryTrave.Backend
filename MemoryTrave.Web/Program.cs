@@ -1,6 +1,14 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using MemoryTrave.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
-app.MapGet("/", () => "Hello World!");
+var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+
+builder.Services.AddDbContext<MemoryTraveDbContext>(options =>
+{
+    options.UseSqlServer(configuration.GetConnectionString(nameof(MemoryTraveDbContext)));
+});
+
+var app = builder.Build();
 
 app.Run();
