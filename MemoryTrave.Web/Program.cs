@@ -1,4 +1,5 @@
 using MemoryTrave.Infrastructure;
+using MemoryTrave.Web.Middlewares;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,5 +11,7 @@ builder.Services.AddDbContext<MemoryTraveDbContext>(options =>
 });
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.Run();
