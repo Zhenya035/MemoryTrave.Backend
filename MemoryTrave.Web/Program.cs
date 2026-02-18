@@ -12,10 +12,18 @@ builder.Services.AddDbContext<MemoryTraveDbContext>(options =>
 });
 
 builder.Services.AddApplicationLayer();
+
+builder.Services.AddJwt(configuration);
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
