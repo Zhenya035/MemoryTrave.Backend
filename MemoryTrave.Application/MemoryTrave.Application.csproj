@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Dto\" />
       <Folder Include="Interfaces\" />
       <Folder Include="Mapping\" />
       <Folder Include="Services\" />
@@ -15,6 +14,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MemoryTrave.Domain\MemoryTrave.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="12.1.1" />
     </ItemGroup>
 
 </Project>
