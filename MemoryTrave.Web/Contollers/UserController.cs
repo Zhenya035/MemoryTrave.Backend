@@ -28,7 +28,7 @@ public class UserController(
     {
         var validResult = await regValidator.ValidateAsync(reg);
         if(!validResult.IsValid)
-            BadRequest(validResult.Errors);
+            return BadRequest(validResult.Errors);
         
         return Ok(await regUseCase.Registration(reg));
     }
@@ -38,7 +38,7 @@ public class UserController(
     {
         var validResult = await authValidator.ValidateAsync(auth);
         if(!validResult.IsValid)
-            BadRequest(validResult.Errors);
+            return BadRequest(validResult.Errors);
         
         return Ok(await authUseCase.Authorization(auth));
     }
