@@ -1,9 +1,6 @@
-﻿using System.Security.Claims;
-using MemoryTrave.Domain.Models;
-
-namespace MemoryTrave.Application.Services;
+﻿namespace MemoryTrave.Application.Interfaces;
 
 public interface IJwtService
 {
-    string GenerateJwt(User user);
+    string GenerateJwt(Domain.Models.User user);
 }

@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using MemoryTrave.Application.Services;
+using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Infrastructure.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
