@@ -47,6 +47,11 @@ public class ExceptionHandlingMiddleware(RequestDelegate next)
                 message = "Resource not found.";
                 detailed = nFEx.Message;
                 break;
+            case UserBannedException uBE:
+                statusCode = StatusCodes.Status403Forbidden;
+                message = "User banned.";
+                detailed = uBE.Message;
+                break;
             default:
                 detailed = exception.Message;
                 break;
