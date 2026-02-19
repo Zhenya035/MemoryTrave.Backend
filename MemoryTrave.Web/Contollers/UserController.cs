@@ -1,22 +1,45 @@
 ﻿using FluentValidation;
 using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
+using MemoryTrave.Application.Interfaces.User;
+using MemoryTrave.Application.Services;
+using MemoryTrave.Application.Services.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MemoryTrave.Web.Contollers;
 
 [ApiController]
 [Route("users")]
-public class UserController(IValidator<RegistrationDto> _validator) : ControllerBase
+public class UserController(
+    IValidator<RegistrationDto> regValidator,
+    IValidator<AuthorizationDto> authValidator,
+    IUserService service,
+    IRegistrationUseCase regUseCase,
+    IAuthorizationUseCase authUseCase) : ControllerBase
 {
+    [HttpGet("private-key")]
+    [Authorize]
+    public async Task<ActionResult<PrivateKeyResponceDto>> GetPrivateKey() =>
+        Ok(await service.GetPrivateKey());
+    
     [HttpPost("registration")]
-    public async Task<ActionResult<AuthorizationResponseDto>> Registration([FromBody] RegistrationDto user)
+    public async Task<ActionResult<AuthorizationResponseDto>> Registration([FromBody] RegistrationDto reg)
     {
-        var result = await _validator.ValidateAsync(user);
+        var validResult = await regValidator.ValidateAsync(reg);
+        if(!validResult.IsValid)
+            BadRequest(validResult.Errors);
         
-        if(!result.IsValid)
-            BadRequest(result.Errors);
+        return Ok(await regUseCase.Registration(reg));
+    }
+
+    [HttpPost("authorization")]
+    public async Task<ActionResult<AuthorizationResponseDto>> Authorization([FromBody] AuthorizationDto auth)
+    {
+        var validResult = await authValidator.ValidateAsync(auth);
+        if(!validResult.IsValid)
+            BadRequest(validResult.Errors);
         
-        return Ok(result);
+        return Ok(await authUseCase.Authorization(auth));
     }
 }
