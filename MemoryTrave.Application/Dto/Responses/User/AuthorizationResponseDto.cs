@@ -2,5 +2,5 @@
 
 public class AuthorizationResponseDto
 {
-    public string EncryptedPrivateKey { get; set; }
+    public string JwtToken { get; set; }
 }
