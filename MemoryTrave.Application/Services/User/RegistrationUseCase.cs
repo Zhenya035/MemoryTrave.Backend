@@ -18,6 +18,7 @@ public class RegistrationUseCase(
         
         var user = UserMapping.MapFromRegistrationDto(regUser);
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(regUser.Password);
+        user.Id = Guid.NewGuid();
 
         user = await userRepository.Registration(user);
         
