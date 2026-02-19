@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Repositories\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\MemoryTrave.Application\MemoryTrave.Application.csproj" />
       <ProjectReference Include="..\MemoryTrave.Domain\MemoryTrave.Domain.csproj" />
     </ItemGroup>
