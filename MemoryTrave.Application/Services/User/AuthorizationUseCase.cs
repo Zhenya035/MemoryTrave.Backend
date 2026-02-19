@@ -11,13 +11,13 @@ public class AuthorizationUseCase(IUserRepository userRepository, IJwtService jw
 {
     public async Task<AuthorizationResponseDto> Authorization(AuthorizationDto authUser)
     {
-        if (await userRepository.UserExistsByEmail(authUser.Email))
-            throw new AlreadyAddedException("This email");
-
         var user = await userRepository.GetByEmail(authUser.Email);
         
         if (user == null)
             throw new NotFoundException("User");
+        
+        if(user.IsBlocked)
+            throw new UserBannedException(user.Email);
         
         if(!BCrypt.Net.BCrypt.Verify(authUser.Password, user.PasswordHash))
             throw new InvalidInputDataException("Password is incorrect");
