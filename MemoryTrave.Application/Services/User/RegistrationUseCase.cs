@@ -13,7 +13,7 @@ public class RegistrationUseCase(
 {
     public async Task<AuthorizationResponseDto> Registration(RegistrationDto regUser)
     {
-        if (await userRepository.UserExists(regUser.Email))
+        if (await userRepository.UserExistsByEmail(regUser.Email))
             throw new AlreadyAddedException("This email");
         
         var user = UserMapping.MapFromRegistrationDto(regUser);

@@ -11,7 +11,7 @@ public class AuthorizationUseCase(IUserRepository userRepository, IJwtService jw
 {
     public async Task<AuthorizationResponseDto> Authorization(AuthorizationDto authUser)
     {
-        if (await userRepository.UserExists(authUser.Email))
+        if (await userRepository.UserExistsByEmail(authUser.Email))
             throw new AlreadyAddedException("This email");
 
         var user = await userRepository.GetByEmail(authUser.Email);
