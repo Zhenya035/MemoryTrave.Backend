@@ -22,11 +22,5 @@ public class RegistrationRequestValidator : AbstractValidator<RegistrationDto>
             .NotEmpty().WithMessage("Username is required.")
             .MinimumLength(3).WithMessage("Username must have at least 3 characters.")
             .MaximumLength(50).WithMessage("Username must have no more than 50 characters.");
-
-        RuleFor(r => r.PublicKey)
-            .NotEmpty().WithMessage("Public Key is required.");
-        
-        RuleFor(r => r.EncryptedPrivateKey)
-            .NotEmpty().WithMessage("Encrypted Private Key is required.");
     }
 }

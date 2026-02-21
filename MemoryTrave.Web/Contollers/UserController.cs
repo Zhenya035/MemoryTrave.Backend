@@ -14,6 +14,7 @@ namespace MemoryTrave.Web.Contollers;
 public class UserController(
     IValidator<RegistrationDto> regValidator,
     IValidator<AuthorizationDto> authValidator,
+    IValidator<AddKeysDto> addKeysValidator,
     IUserService service,
     IRegistrationUseCase regUseCase,
     IAuthorizationUseCase authUseCase) : ControllerBase
@@ -41,5 +42,18 @@ public class UserController(
             return BadRequest(validResult.Errors);
         
         return Ok(await authUseCase.Authorization(auth));
+    }
+
+    [HttpPost("add-keys")]
+    [Authorize]
+    public async Task<IActionResult> AddKeys([FromBody] AddKeysDto addKeys)
+    {
+        var validResult = await addKeysValidator.ValidateAsync(addKeys);
+        if(!validResult.IsValid)
+            return BadRequest(validResult.Errors);
+
+        await service.AddKeys(addKeys);
+        
+        return NoContent();
     }
 }

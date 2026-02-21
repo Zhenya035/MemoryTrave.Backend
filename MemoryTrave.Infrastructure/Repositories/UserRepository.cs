@@ -28,6 +28,15 @@ public class UserRepository(MemoryTraveDbContext context) : IUserRepository
         return user?.EncryptedPrivateKey;
     }
 
+    public async Task AddKey(Guid userId, string publicKey, string encyptedPrivateKey)
+    { 
+        await context.Users
+            .Where(u => u.Id == userId)
+            .ExecuteUpdateAsync(updSetBuild => updSetBuild
+                .SetProperty(u => u.PublicKey, publicKey)
+                .SetProperty(u => u.EncryptedPrivateKey, encyptedPrivateKey));
+    }
+
     public async Task<bool> UserExistsById(Guid id) =>
         await context.Users
             .AsNoTracking()

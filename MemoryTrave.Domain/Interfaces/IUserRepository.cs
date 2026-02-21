@@ -7,7 +7,7 @@ public interface IUserRepository
     public Task<User> Registration(User user);
     public Task<User?> GetByEmail(string email);
     public Task<string?> GetKeyById(Guid id);
-    
+    public Task AddKey(Guid userId, string publicKey, string encyptedPrivateKey);
     public Task<bool> UserExistsById(Guid id);
     public Task<bool> UserExistsByEmail(string email);
 }

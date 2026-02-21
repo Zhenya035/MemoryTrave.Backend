@@ -9,8 +9,6 @@ public static class UserMapping
         new()
         {
             Email = regUser.Email,
-            Username =  regUser.Username,
-            PublicKey =  regUser.PublicKey,
-            EncryptedPrivateKey =  regUser.EncryptedPrivateKey
+            Username =  regUser.Username
         };
 }
