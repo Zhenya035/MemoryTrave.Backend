@@ -2,7 +2,6 @@
 using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces.User;
-using MemoryTrave.Application.Services;
 using MemoryTrave.Application.Services.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +43,7 @@ public class UserController(
         return Ok(await authUseCase.Authorization(auth));
     }
 
-    [HttpPost("add-keys")]
+    [HttpPut("add-keys")]
     [Authorize]
     public async Task<IActionResult> AddKeys([FromBody] AddKeysDto addKeys)
     {
