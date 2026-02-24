@@ -10,7 +10,7 @@ public static class ArticleMapping
         new()
         {
             Id = article.Id,
-            LocationName = article.Location.Name,
+            LocationName = article.Location?.Name,
             LastChange = article.LastChange,
             IsPrivate = article.Visibility == VisibilityEnum.Private,
             EncryptedPreviewData = article.Visibility == VisibilityEnum.Private ?  article.EncryptedPreviewData : null,

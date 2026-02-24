@@ -1,6 +1,5 @@
 ﻿using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
-using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Application.Interfaces.Jwt;
 using MemoryTrave.Application.Interfaces.User;
 using MemoryTrave.Domain.Exceptions;
@@ -36,7 +35,7 @@ public class AuthorizationUseCase(
         return response;
     }
     
-    public async Task<PrivateKeyResponceDto> GetPrivateKey()
+    public async Task<PrivateKeyResponseDto> GetPrivateKey()
     {
         var userId = userProvider.GetUserId();
 
@@ -48,7 +47,7 @@ public class AuthorizationUseCase(
         if(encryptedPrivateKey == null)
             throw new NotFoundException("PrivateKey");
 
-        var response = new PrivateKeyResponceDto()
+        var response = new PrivateKeyResponseDto()
         {
             EncryptedPrivateKey = encryptedPrivateKey
         };

@@ -10,7 +10,7 @@ public class CurrentUserProvider(IHttpContextAccessor accessor) : ICurrentUserPr
     {
         var user = accessor.HttpContext?.User;
         
-        if(user == null || user.Identity == null || !user.Identity.IsAuthenticated == true)
+        if(user == null || user.Identity == null || !user.Identity.IsAuthenticated)
             throw new InvalidInputDataException("Token is invalid");
 
         var idClaim = user.FindFirst("id") ?? user.FindFirst(ClaimTypes.NameIdentifier);

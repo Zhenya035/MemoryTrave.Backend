@@ -1,6 +1,4 @@
-﻿using MemoryTrave.Domain.Models;
-
-namespace MemoryTrave.Domain.Interfaces;
+﻿namespace MemoryTrave.Domain.Interfaces;
 
 public interface IFriendshipRepository
 {

@@ -1,6 +1,5 @@
 ﻿using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces.Profile;
-using MemoryTrave.Application.Interfaces.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

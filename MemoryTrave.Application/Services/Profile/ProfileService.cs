@@ -1,8 +1,6 @@
 ﻿using MemoryTrave.Application.Dto.Responses.User;
-using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Application.Interfaces.Jwt;
 using MemoryTrave.Application.Interfaces.Profile;
-using MemoryTrave.Application.Interfaces.User;
 using MemoryTrave.Application.Mapping;
 using MemoryTrave.Domain.Exceptions;
 using MemoryTrave.Domain.Interfaces;

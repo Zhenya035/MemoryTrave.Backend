@@ -19,7 +19,7 @@ public class AuthController(
 {
     [HttpGet("keys/private")]
     [Authorize]
-    public async Task<ActionResult<PrivateKeyResponceDto>> GetPrivateKey() =>
+    public async Task<ActionResult<PrivateKeyResponseDto>> GetPrivateKey() =>
         Ok(await authUseCase.GetPrivateKey());
     
     [HttpPost("registration")]
