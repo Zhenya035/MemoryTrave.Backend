@@ -7,14 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Dto\" />
-      <Folder Include="Interfaces\" />
-      <Folder Include="Mapping\" />
-      <Folder Include="Services\" />
+      <ProjectReference Include="..\MemoryTrave.Domain\MemoryTrave.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MemoryTrave.Domain\MemoryTrave.Domain.csproj" />
+      <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+      <PackageReference Include="FluentValidation" Version="12.1.1" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,45 @@
+﻿using MemoryTrave.Application.Dto.Requests.User;
+using MemoryTrave.Application.Dto.Responses.User;
+using MemoryTrave.Application.Interfaces.Jwt;
+using MemoryTrave.Application.Mapping;
+using MemoryTrave.Domain.Exceptions;
+using MemoryTrave.Domain.Interfaces;
+
+namespace MemoryTrave.Application.Services.User;
+
+public class RegistrationUseCase(
+    IUserRepository userRepository,
+    ICurrentUserProvider userProvider,
+    IJwtService jwtService) : IRegistrationUseCase
+{
+    public async Task<AuthorizationResponseDto> Registration(RegistrationDto regUser)
+    {
+        if (await userRepository.UserExistsByEmail(regUser.Email))
+            throw new AlreadyAddedException("This email");
+        
+        var user = UserMapping.MapFromRegistrationDto(regUser);
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(regUser.Password);
+        user.Id = Guid.NewGuid();
+
+        user = await userRepository.Registration(user);
+        
+        var token = jwtService.GenerateJwt(user);
+
+        var response = new AuthorizationResponseDto()
+        {
+            JwtToken = token,
+        };
+        
+        return response;
+    }
+    
+    public async Task AddKeys(AddKeysDto keys)
+    {
+        var userId = userProvider.GetUserId();
+        
+        if (!await userRepository.UserExistsById(userId))
+            throw new NotFoundException("User");
+        
+        await userRepository.AddKey(userId, keys.PublicKey, keys.EncryptedPrivateKey);
+    }
+}

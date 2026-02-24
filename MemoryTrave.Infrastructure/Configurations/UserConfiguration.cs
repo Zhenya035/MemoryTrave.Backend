@@ -11,10 +11,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(u => u.Id);
         builder.Property(u => u.Id).ValueGeneratedNever();
         
+        builder.Property(u=>u.Email).IsRequired();
+        builder.HasIndex(u => u.Email).IsUnique();
+        
         builder.Property(u => u.Username).IsRequired();
-        builder.Property(u=>u.EmailHash).IsRequired();
         builder.Property(u=>u.PasswordHash).IsRequired();
         builder.Property(u=>u.PublicKey).IsRequired();
+        builder.Property(u=>u.EncryptedPrivateKey).IsRequired();
         builder.Property(u => u.Role)
             .IsRequired()
             .HasConversion<string>();

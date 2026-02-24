@@ -16,9 +16,9 @@ public class Article
     public string? Description { get; set; } = null;
     public List<string>? PhotosUrls { get; set; } = null;
     
-    public User Author { get; set; }
+    public User? Author { get; set; }
     public Guid AuthorId { get; set; }
     
-    public Location Location { get; set; }
+    public Location? Location { get; set; }
     public Guid LocationId { get; set; }
 }

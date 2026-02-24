@@ -7,9 +7,10 @@ public class User
     public Guid Id { get; set; }
     
     public string Username { get; set; } = string.Empty;
-    public string EmailHash { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
     public string PublicKey { get; set; } = string.Empty;
+    public string EncryptedPrivateKey { get; set; } = string.Empty;
     public RoleEnum Role { get; set; } = RoleEnum.User;
     
     public List<FriendRequest> SentFriendRequests { get; set; } = [];
