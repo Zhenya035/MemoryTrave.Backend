@@ -6,22 +6,21 @@ using MemoryTrave.Application.Services.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MemoryTrave.Web.Contollers;
+namespace MemoryTrave.Web.Contollers.User;
 
 [ApiController]
-[Route("users")]
-public class UserController(
+[Route("users/auth")]
+public class AuthController(
     IValidator<RegistrationDto> regValidator,
     IValidator<AuthorizationDto> authValidator,
     IValidator<AddKeysDto> addKeysValidator,
-    IUserService service,
     IRegistrationUseCase regUseCase,
     IAuthorizationUseCase authUseCase) : ControllerBase
 {
-    [HttpGet("private-key")]
+    [HttpGet("keys/private")]
     [Authorize]
     public async Task<ActionResult<PrivateKeyResponceDto>> GetPrivateKey() =>
-        Ok(await service.GetPrivateKey());
+        Ok(await authUseCase.GetPrivateKey());
     
     [HttpPost("registration")]
     public async Task<ActionResult<AuthorizationResponseDto>> Registration([FromBody] RegistrationDto reg)
@@ -43,7 +42,7 @@ public class UserController(
         return Ok(await authUseCase.Authorization(auth));
     }
 
-    [HttpPut("add-keys")]
+    [HttpPut("add/keys")]
     [Authorize]
     public async Task<IActionResult> AddKeys([FromBody] AddKeysDto addKeys)
     {
@@ -51,7 +50,7 @@ public class UserController(
         if(!validResult.IsValid)
             return BadRequest(validResult.Errors);
 
-        await service.AddKeys(addKeys);
+        await regUseCase.AddKeys(addKeys);
         
         return NoContent();
     }
