@@ -7,7 +7,10 @@ using MemoryTrave.Domain.Interfaces;
 
 namespace MemoryTrave.Application.Services.User;
 
-public class AuthorizationUseCase(IUserRepository userRepository, IJwtService jwtService) : IAuthorizationUseCase
+public class AuthorizationUseCase(
+    IUserRepository userRepository,
+    ICurrentUserProvider user,
+    IJwtService jwtService) : IAuthorizationUseCase
 {
     public async Task<AuthorizationResponseDto> Authorization(AuthorizationDto authUser)
     {
@@ -29,6 +32,25 @@ public class AuthorizationUseCase(IUserRepository userRepository, IJwtService jw
             JwtToken = token,
         };
         
+        return response;
+    }
+    
+    public async Task<PrivateKeyResponceDto> GetPrivateKey()
+    {
+        var userId = user.GetUserId();
+
+        if (!await userRepository.UserExistsById(userId))
+            throw new NotFoundException("User");
+        
+        var encryptedPrivateKey = await userRepository.GetKeyById(userId);
+        
+        if(encryptedPrivateKey == null)
+            throw new NotFoundException("PrivateKey");
+
+        var response = new PrivateKeyResponceDto()
+        {
+            EncryptedPrivateKey = encryptedPrivateKey
+        };
         return response;
     }
 }

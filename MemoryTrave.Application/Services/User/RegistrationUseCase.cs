@@ -9,6 +9,7 @@ namespace MemoryTrave.Application.Services.User;
 
 public class RegistrationUseCase(
     IUserRepository userRepository,
+    ICurrentUserProvider user,
     IJwtService jwtService) : IRegistrationUseCase
 {
     public async Task<AuthorizationResponseDto> Registration(RegistrationDto regUser)
@@ -30,5 +31,15 @@ public class RegistrationUseCase(
         };
         
         return response;
+    }
+    
+    public async Task AddKeys(AddKeysDto keys)
+    {
+        var userId = user.GetUserId();
+        
+        if (!await userRepository.UserExistsById(userId))
+            throw new NotFoundException("User");
+        
+        await userRepository.AddKey(userId, keys.PublicKey, keys.EncryptedPrivateKey);
     }
 }

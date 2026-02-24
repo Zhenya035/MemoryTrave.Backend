@@ -6,4 +6,5 @@ namespace MemoryTrave.Application.Services.User;
 public interface IRegistrationUseCase
 {
     public Task<AuthorizationResponseDto> Registration(RegistrationDto regUser);
+    public Task AddKeys(AddKeysDto keys);
 }
