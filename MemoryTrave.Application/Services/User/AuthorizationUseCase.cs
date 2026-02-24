@@ -1,6 +1,7 @@
 ﻿using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces;
+using MemoryTrave.Application.Interfaces.Jwt;
 using MemoryTrave.Application.Interfaces.User;
 using MemoryTrave.Domain.Exceptions;
 using MemoryTrave.Domain.Interfaces;
@@ -9,12 +10,12 @@ namespace MemoryTrave.Application.Services.User;
 
 public class AuthorizationUseCase(
     IUserRepository userRepository,
-    ICurrentUserProvider user,
+    ICurrentUserProvider userProvider,
     IJwtService jwtService) : IAuthorizationUseCase
 {
     public async Task<AuthorizationResponseDto> Authorization(AuthorizationDto authUser)
     {
-        var user = await userRepository.GetByEmail(authUser.Email);
+        var user = await userRepository.GetByEmailForAuth(authUser.Email);
         
         if (user == null)
             throw new NotFoundException("User");
@@ -37,7 +38,7 @@ public class AuthorizationUseCase(
     
     public async Task<PrivateKeyResponceDto> GetPrivateKey()
     {
-        var userId = user.GetUserId();
+        var userId = userProvider.GetUserId();
 
         if (!await userRepository.UserExistsById(userId))
             throw new NotFoundException("User");

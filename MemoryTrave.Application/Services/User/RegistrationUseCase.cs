@@ -1,6 +1,6 @@
 ﻿using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
-using MemoryTrave.Application.Interfaces;
+using MemoryTrave.Application.Interfaces.Jwt;
 using MemoryTrave.Application.Mapping;
 using MemoryTrave.Domain.Exceptions;
 using MemoryTrave.Domain.Interfaces;
@@ -9,7 +9,7 @@ namespace MemoryTrave.Application.Services.User;
 
 public class RegistrationUseCase(
     IUserRepository userRepository,
-    ICurrentUserProvider user,
+    ICurrentUserProvider userProvider,
     IJwtService jwtService) : IRegistrationUseCase
 {
     public async Task<AuthorizationResponseDto> Registration(RegistrationDto regUser)
@@ -35,7 +35,7 @@ public class RegistrationUseCase(
     
     public async Task AddKeys(AddKeysDto keys)
     {
-        var userId = user.GetUserId();
+        var userId = userProvider.GetUserId();
         
         if (!await userRepository.UserExistsById(userId))
             throw new NotFoundException("User");
