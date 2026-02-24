@@ -1,4 +1,4 @@
-﻿namespace MemoryTrave.Application.Interfaces;
+﻿namespace MemoryTrave.Application.Interfaces.Jwt;
 
 public interface IJwtService
 {

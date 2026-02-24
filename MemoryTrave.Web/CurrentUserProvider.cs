@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using MemoryTrave.Application.Interfaces;
+using MemoryTrave.Application.Interfaces.Jwt;
 using MemoryTrave.Domain.Exceptions;
 
 namespace MemoryTrave.Web;

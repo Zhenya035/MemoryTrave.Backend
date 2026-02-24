@@ -1,4 +1,4 @@
-using MemoryTrave.Application.Interfaces;
+using MemoryTrave.Application.Interfaces.Jwt;
 using MemoryTrave.Infrastructure;
 using MemoryTrave.Web;
 using MemoryTrave.Web.Extensions;
