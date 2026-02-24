@@ -14,10 +14,28 @@ public class UserRepository(MemoryTraveDbContext context) : IUserRepository
         return newUser.Entity;
     }
 
-    public async Task<User?> GetByEmail(string email) =>
+    public async Task<User?> GetByEmailForAuth(string email) =>
         await context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Email == email);
+
+    public async Task<User?> GetByIdWithArticles(Guid userId) =>
+        await context.Users
+            .AsNoTracking()
+            .Include(u => u.Articles)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+    public async Task<User?> GetUserById(Guid userId) =>
+        await context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+    public async Task<List<User>> GetBlockUsers(List<Guid> userIds) =>
+        await context.Users
+            .AsNoTracking()
+            .Where(u => userIds.Contains(u.Id))
+            .ToListAsync();
+
 
     public async Task<string?> GetKeyById(Guid id)
     {
