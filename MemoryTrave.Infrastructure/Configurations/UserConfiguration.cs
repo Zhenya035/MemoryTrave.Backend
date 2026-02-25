@@ -41,5 +41,15 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .WithOne(a => a.Author)
             .HasForeignKey(a => a.AuthorId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasMany<Friendship>()
+            .WithOne()
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.HasMany<Friendship>()
+            .WithOne()
+            .HasForeignKey(f => f.FriendId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
