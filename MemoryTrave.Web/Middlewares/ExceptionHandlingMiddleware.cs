@@ -1,9 +1,10 @@
 ﻿using System.Text.Json;
+using MemoryTrave.Application.Dto;
 using MemoryTrave.Domain.Exceptions;
 
 namespace MemoryTrave.Web.Middlewares;
 
-public class ExceptionHandlingMiddleware(RequestDelegate next)
+public class ExceptionHandlingMiddleware(RequestDelegate next, IWebHostEnvironment env)
 {
     public async Task Invoke(HttpContext context)
     {
@@ -17,53 +18,46 @@ public class ExceptionHandlingMiddleware(RequestDelegate next)
         }
     }
 
-    private static async Task HandleException(HttpContext context, Exception exception)
+    private async Task HandleException(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
 
         var statusCode = StatusCodes.Status500InternalServerError;
-        var message = "An unexpected error occurred.";
-        var detailed = string.Empty;
+        string message;
 
         switch (exception)
         {
             case AlreadyAddedException alrAddEx:
                 statusCode = StatusCodes.Status409Conflict;
-                message = "Resource already exists.";
-                detailed = alrAddEx.Message;
+                message = env.IsDevelopment() ? alrAddEx.Message : "Resource already exists.";
                 break;
             case InvalidInputDataException invInpEx:
                 statusCode = StatusCodes.Status400BadRequest;
-                message = "Invalid input.";
-                detailed = invInpEx.Message;
-                break;
-            case IncorrectAuthorizationException invAuthEx:
-                statusCode = StatusCodes.Status401Unauthorized;
-                message = "Authorization failed.";
-                detailed = invAuthEx.Message;
+                message = env.IsDevelopment() ? invInpEx.Message : "Invalid input data.";
                 break;
             case NotFoundException nFEx:
                 statusCode = StatusCodes.Status404NotFound;
-                message = "Resource not found.";
-                detailed = nFEx.Message;
+                message = env.IsDevelopment() ? nFEx.Message : "Resource not found.";
                 break;
             case UserBannedException uBE:
                 statusCode = StatusCodes.Status403Forbidden;
-                message = "User banned.";
-                detailed = uBE.Message;
+                message = env.IsDevelopment() ? uBE.Message : "Access denied.";
+                break;
+            case UnAuthorizedException unAuthEx:
+                statusCode = StatusCodes.Status401Unauthorized;
+                message = env.IsDevelopment() ? unAuthEx.Message : "Invalid credentials or token.";
                 break;
             default:
-                detailed = exception.Message;
+                message = env.IsDevelopment() ? exception.Message : "An unexpected error occurred.";
                 break;
         }
 
         context.Response.StatusCode = statusCode;
 
-        var response = new
+        var response = new ApiResponse()
         {
-            StatusCode = statusCode,
+            Success =  false,
             Message = message,
-            Detailed = detailed
         };
         
         await context.Response.WriteAsync(JsonSerializer.Serialize(response));
