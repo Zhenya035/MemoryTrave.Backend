@@ -18,7 +18,6 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddInfrastructureLayer();
 builder.Services.AddApplicationLayer();
-builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
 builder.Services.AddJwt(configuration);
 
