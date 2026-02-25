@@ -30,11 +30,7 @@ public abstract class BaseController : ControllerBase
 
     protected IActionResult BadRequest(ValidationResult result)
     {
-        var formattedErrors = result.Errors.Select(e => new
-        {
-            field = e.PropertyName,
-            error = e.ErrorMessage
-        }).ToList();
+        var formattedErrors = result.Errors.Select(e => e.ErrorMessage).ToList();
         
         return base.BadRequest(new ApiResponse
         {
