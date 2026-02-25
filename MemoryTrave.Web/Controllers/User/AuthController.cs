@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Interfaces.User;
-using MemoryTrave.Application.Services.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,7 +40,7 @@ public class AuthController(
     {
         var validResult = await authValidator.ValidateAsync(auth);
         if(!validResult.IsValid)
-            return BadRequest(validResult.Errors);
+            return BadRequest(validResult);
 
         var token = await service.Authorization(auth);
         return Ok(token);
@@ -53,7 +52,7 @@ public class AuthController(
     {
         var validResult = await addKeysValidator.ValidateAsync(addKeys);
         if(!validResult.IsValid)
-            return BadRequest(validResult.Errors);
+            return BadRequest(validResult);
 
         var userId = GetCurrentUserId();
         
