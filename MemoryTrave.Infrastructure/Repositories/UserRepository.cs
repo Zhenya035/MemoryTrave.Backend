@@ -6,14 +6,6 @@ namespace MemoryTrave.Infrastructure.Repositories;
 
 public class UserRepository(MemoryTraveDbContext context) : IUserRepository
 {
-    public async Task<User> Registration(User user)
-    {
-        var newUser = await context.Users.AddAsync(user);
-        await context.SaveChangesAsync();
-        
-        return newUser.Entity;
-    }
-
     public async Task<User?> GetByEmailForAuth(string email) =>
         await context.Users
             .AsNoTracking()
@@ -46,13 +38,40 @@ public class UserRepository(MemoryTraveDbContext context) : IUserRepository
         return user?.EncryptedPrivateKey;
     }
 
-    public async Task AddKey(Guid userId, string publicKey, string encyptedPrivateKey)
+    public async Task<User> Registration(User user)
+    {
+        var newUser = await context.Users.AddAsync(user);
+        await context.SaveChangesAsync();
+        
+        return newUser.Entity;
+    }
+    
+    public async Task AddKey(Guid userId, string publicKey, string encryptedPrivateKey)
     { 
         await context.Users
             .Where(u => u.Id == userId)
             .ExecuteUpdateAsync(updSetBuild => updSetBuild
                 .SetProperty(u => u.PublicKey, publicKey)
-                .SetProperty(u => u.EncryptedPrivateKey, encyptedPrivateKey));
+                .SetProperty(u => u.EncryptedPrivateKey, encryptedPrivateKey));
+    }
+
+    public async Task Delete(Guid userId)
+    {
+        await context.FriendRequests
+            .Where(fr => fr.FromUserId == userId || fr.ToUserId == userId)
+            .ExecuteDeleteAsync();
+        
+        await context.Friendships
+            .Where(fs => fs.UserId == userId || fs.FriendId == userId)
+            .ExecuteDeleteAsync();
+        
+        await context.ArticleAccesses
+            .Where(aa => aa.UserId == userId)
+            .ExecuteDeleteAsync();
+        
+        await context.Users
+            .Where(u => u.Id == userId)
+            .ExecuteDeleteAsync();
     }
 
     public async Task<bool> UserExistsById(Guid id) =>
