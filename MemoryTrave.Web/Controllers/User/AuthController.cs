@@ -1,45 +1,51 @@
 ﻿using FluentValidation;
 using MemoryTrave.Application.Dto.Requests.User;
-using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces.User;
 using MemoryTrave.Application.Services.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MemoryTrave.Web.Contollers.User;
+namespace MemoryTrave.Web.Controllers.User;
 
-[ApiController]
 [Route("users/auth")]
 public class AuthController(
     IValidator<RegistrationDto> regValidator,
     IValidator<AuthorizationDto> authValidator,
     IValidator<AddKeysDto> addKeysValidator,
     IRegistrationUseCase regUseCase,
-    IAuthorizationUseCase authUseCase) : ControllerBase
+    IAuthorizationUseCase authUseCase) : BaseController
 {
     [HttpGet("keys/private")]
     [Authorize]
-    public async Task<ActionResult<PrivateKeyResponseDto>> GetPrivateKey() =>
-        Ok(await authUseCase.GetPrivateKey());
+    public async Task<IActionResult> GetPrivateKey()
+    {
+        var userId = GetCurrentUserId();
+        
+        var keys = await authUseCase.GetPrivateKey(userId);
+        
+        return Ok(keys);
+    }
     
     [HttpPost("registration")]
-    public async Task<ActionResult<AuthorizationResponseDto>> Registration([FromBody] RegistrationDto reg)
+    public async Task<IActionResult> Registration([FromBody] RegistrationDto reg)
     {
         var validResult = await regValidator.ValidateAsync(reg);
         if(!validResult.IsValid)
-            return BadRequest(validResult.Errors);
-        
-        return Ok(await regUseCase.Registration(reg));
+            return BadRequest(validResult);
+
+        var token = await regUseCase.Registration(reg);
+        return Created(token);
     }
 
     [HttpPost("authorization")]
-    public async Task<ActionResult<AuthorizationResponseDto>> Authorization([FromBody] AuthorizationDto auth)
+    public async Task<IActionResult> Authorization([FromBody] AuthorizationDto auth)
     {
         var validResult = await authValidator.ValidateAsync(auth);
         if(!validResult.IsValid)
             return BadRequest(validResult.Errors);
-        
-        return Ok(await authUseCase.Authorization(auth));
+
+        var token = await authUseCase.Authorization(auth);
+        return Ok(token);
     }
 
     [HttpPut("add/keys")]
@@ -50,8 +56,10 @@ public class AuthController(
         if(!validResult.IsValid)
             return BadRequest(validResult.Errors);
 
-        await regUseCase.AddKeys(addKeys);
+        var userId = GetCurrentUserId();
         
-        return NoContent();
+        await regUseCase.AddKeys(addKeys, userId);
+        
+        return Ok();
     }
 }
