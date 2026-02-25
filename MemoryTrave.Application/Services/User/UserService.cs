@@ -38,7 +38,8 @@ public class UserService(
     
     public async Task<PrivateKeyResponseDto> GetPrivateKey(Guid userId)
     {
-        if (!await userRepository.UserExistsById(userId))
+        var isExist = await userRepository.UserExistsById(userId);
+        if (!isExist)
             throw new NotFoundException("User");
         
         var encryptedPrivateKey = await userRepository.GetKeyById(userId);
@@ -55,7 +56,8 @@ public class UserService(
 
     public async Task<AuthorizationResponseDto> Registration(RegistrationDto regUser)
     {
-        if (await userRepository.UserExistsByEmail(regUser.Email))
+        var isExist = await userRepository.UserExistsByEmail(regUser.Email);
+        if (isExist)
             throw new AlreadyAddedException("This email");
         
         var user = UserMapping.MapFromRegistrationDto(regUser);
@@ -76,7 +78,8 @@ public class UserService(
     
     public async Task AddKeys(AddKeysDto keys, Guid userId)
     {
-        if (!await userRepository.UserExistsById(userId))
+        var isExist = await userRepository.UserExistsById(userId);
+        if (!isExist)
             throw new NotFoundException("User");
         
         await userRepository.AddKey(userId, keys.PublicKey, keys.EncryptedPrivateKey);
@@ -110,8 +113,12 @@ public class UserService(
         return blockUsers.Select(UserMapping.MapToGetUserDto).ToList();
     }
 
-    public Task DeleteProfile(Guid userId)
+    public async Task Delete(Guid userId)
     {
-        throw new NotImplementedException();
+        var isExists = await userRepository.UserExistsById(userId);
+        if (!isExists)
+            throw new NotFoundException("User");
+        
+        await userRepository.Delete(userId);
     }
 }
