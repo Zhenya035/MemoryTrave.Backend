@@ -16,5 +16,6 @@ public interface IUserService
     //for profile
     public Task<GetProfileDto> GetProfile(Guid userId);
     public Task<List<GetUserDto>> GetBlockUsers(Guid userId);
-    public Task DeleteProfile(Guid userId);
+    
+    public Task Delete(Guid userId);
 }
