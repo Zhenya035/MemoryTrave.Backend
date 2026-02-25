@@ -12,8 +12,7 @@ public class AuthController(
     IValidator<RegistrationDto> regValidator,
     IValidator<AuthorizationDto> authValidator,
     IValidator<AddKeysDto> addKeysValidator,
-    IRegistrationUseCase regUseCase,
-    IAuthorizationUseCase authUseCase) : BaseController
+    IUserService service) : BaseController
 {
     [HttpGet("keys/private")]
     [Authorize]
@@ -21,7 +20,7 @@ public class AuthController(
     {
         var userId = GetCurrentUserId();
         
-        var keys = await authUseCase.GetPrivateKey(userId);
+        var keys = await service.GetPrivateKey(userId);
         
         return Ok(keys);
     }
@@ -33,7 +32,7 @@ public class AuthController(
         if(!validResult.IsValid)
             return BadRequest(validResult);
 
-        var token = await regUseCase.Registration(reg);
+        var token = await service.Registration(reg);
         return Created(token);
     }
 
@@ -44,7 +43,7 @@ public class AuthController(
         if(!validResult.IsValid)
             return BadRequest(validResult.Errors);
 
-        var token = await authUseCase.Authorization(auth);
+        var token = await service.Authorization(auth);
         return Ok(token);
     }
 
@@ -58,7 +57,7 @@ public class AuthController(
 
         var userId = GetCurrentUserId();
         
-        await regUseCase.AddKeys(addKeys, userId);
+        await service.AddKeys(addKeys, userId);
         
         return Ok();
     }
