@@ -32,7 +32,7 @@ public class AuthController(
             return BadRequest(validResult);
 
         var token = await service.Registration(reg);
-        return Created(token);
+        return Ok(token);
     }
 
     [HttpPost("authorization")]
