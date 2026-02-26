@@ -13,7 +13,7 @@ public class FriendshipController : BaseController
         return Success();
     }
 
-    [HttpDelete("delete/{friendId}")]
+    [HttpDelete("{friendId:guid}")]
     public async Task<IActionResult> Delete(Guid friendId)
     {
         return Success();

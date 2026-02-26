@@ -21,19 +21,19 @@ public class LocationController : BaseController
         return Success();
     }
 
-    [HttpPost("add")]
+    [HttpPost]
     public async Task<IActionResult> Add()
     {
         return Success();
     }
 
-    [HttpPut("update")]
+    [HttpPut]
     public async Task<IActionResult> Update()
     {
         return Success();
     }
 
-    [HttpDelete("delete")]
+    [HttpDelete]
     public async Task<IActionResult> Delete()
     {
         return Success();

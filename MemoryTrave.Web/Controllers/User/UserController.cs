@@ -6,7 +6,7 @@ namespace MemoryTrave.Web.Controllers.User;
 [Route("users")]
 public class UserController(IUserService service) : BaseController
 {
-    [HttpDelete("delete")]
+    [HttpDelete]
     public async Task<IActionResult> Delete()
     {
         var userId = GetCurrentUserId();
