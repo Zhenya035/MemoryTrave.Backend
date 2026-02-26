@@ -12,6 +12,6 @@ public class UserController(IUserService service) : BaseController
         var userId = GetCurrentUserId();
         
         await service.Delete(userId);
-        return Ok();
+        return Success();
     }
 }

@@ -9,7 +9,7 @@ namespace MemoryTrave.Web.Controllers;
 [ApiController]
 public abstract class BaseController : ControllerBase
 {
-    protected IActionResult Ok<T>(T data, string? message = null) =>
+    protected IActionResult Success<T>(T data, string? message = null) =>
         base.Ok(new ApiResponse<T>
         {
             Success = true,
@@ -17,18 +17,17 @@ public abstract class BaseController : ControllerBase
             Message = message
         });
 
-    protected IActionResult Ok() =>
+    protected IActionResult Success() =>
         base.Ok(new ApiResponse { Success = true });
 
-    protected IActionResult Created<T>(T data) =>
+    protected IActionResult IsCreated<T>(T data) =>
         StatusCode(201, new ApiResponse<T>
         {
             Success =  true,
             Data = data
         });
 
-
-    protected IActionResult BadRequest(ValidationResult result)
+    protected IActionResult ValidFailed(ValidationResult result)
     {
         var formattedErrors = result.Errors.Select(e => e.ErrorMessage).ToList();
         
@@ -37,6 +36,16 @@ public abstract class BaseController : ControllerBase
             Success = false,
             Message = "Validation failed",
             Errors = formattedErrors
+        });
+    }
+    
+    protected IActionResult ValidFailed(string error)
+    {
+        return base.BadRequest(new ApiResponse
+        {
+            Success = false,
+            Message = "Validation failed",
+            Errors = error
         });
     }
 

@@ -10,12 +10,12 @@ public class FriendshipController : BaseController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok();
+        return Success();
     }
 
     [HttpDelete("delete/{friendId}")]
     public async Task<IActionResult> Delete(Guid friendId)
     {
-        return Ok();
+        return Success();
     }
 }

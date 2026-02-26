@@ -10,36 +10,36 @@ public class ArticleController : BaseController
     [HttpGet("{articleId}")]
     public async Task<IActionResult> Get(Guid articleId)
     {
-        return Ok();
+        return Success();
     }
 
     [HttpPost("private/add")]
     public async Task<IActionResult> AddPrivate()
     {
-        return Ok();;
+        return Success();;
     }
 
     [HttpPost("public/add")]
     public async Task<IActionResult> AddPublic()
     {
-        return Ok();;
+        return Success();;
     }
 
     [HttpPut("private/update")]
     public async Task<IActionResult> UpdatePrivate()
     {
-        return Ok();
+        return Success();
     }
 
     [HttpPut("public/update")]
     public async Task<IActionResult> UpdatePublic()
     {
-        return Ok();
+        return Success();
     }
 
     [HttpDelete("{articleId}/delete")]
     public async Task<IActionResult> Delete(Guid articleId)
     {
-        return Ok();
+        return Success();
     }
 }

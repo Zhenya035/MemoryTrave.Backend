@@ -14,7 +14,7 @@ public class ProfileController(IUserService service) : BaseController
     {
         var userId = GetCurrentUserId();
         var result = await service.GetProfile(userId);
-        return Ok(result);
+        return Success(result);
     }
 
     [HttpGet("blocks")]
@@ -23,6 +23,6 @@ public class ProfileController(IUserService service) : BaseController
         var userId = GetCurrentUserId();
         
         var result = await service.GetBlockUsers(userId);
-        return Ok(result);
+        return Success(result);
     }
 }

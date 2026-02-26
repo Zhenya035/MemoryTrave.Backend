@@ -10,24 +10,24 @@ public class FriendRequestController : BaseController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok();
+        return Success();
     }
 
     [HttpPost("confirm")]
     public async Task<IActionResult> Confirm()
     {
-        return Ok();
+        return Success();
     }
 
     [HttpDelete("cancel")]
     public async Task<IActionResult> Cancel()
     {
-        return Ok();
+        return Success();
     }
 
     [HttpDelete("delete")]
     public async Task<IActionResult> Delete()
     {
-        return Ok();
+        return Success();
     }
 }

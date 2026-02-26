@@ -21,7 +21,7 @@ public class AuthController(
         
         var keys = await service.GetPrivateKey(userId);
         
-        return Ok(keys);
+        return Success(keys);
     }
     
     [HttpPost("registration")]
@@ -29,10 +29,10 @@ public class AuthController(
     {
         var validResult = await regValidator.ValidateAsync(reg);
         if(!validResult.IsValid)
-            return BadRequest(validResult);
+            return ValidFailed(validResult);
 
         var token = await service.Registration(reg);
-        return Ok(token);
+        return Success(token);
     }
 
     [HttpPost("authorization")]
@@ -40,10 +40,10 @@ public class AuthController(
     {
         var validResult = await authValidator.ValidateAsync(auth);
         if(!validResult.IsValid)
-            return BadRequest(validResult);
+            return ValidFailed(validResult);
 
         var token = await service.Authorization(auth);
-        return Ok(token);
+        return Success(token);
     }
 
     [HttpPut("add/keys")]
@@ -52,12 +52,12 @@ public class AuthController(
     {
         var validResult = await addKeysValidator.ValidateAsync(addKeys);
         if(!validResult.IsValid)
-            return BadRequest(validResult);
+            return ValidFailed(validResult);
 
         var userId = GetCurrentUserId();
         
         await service.AddKeys(addKeys, userId);
         
-        return Ok();
+        return Success();
     }
 }
