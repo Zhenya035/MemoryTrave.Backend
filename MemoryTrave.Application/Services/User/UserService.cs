@@ -1,8 +1,8 @@
-﻿using MemoryTrave.Application.Dto.Requests.User;
+﻿using AutoMapper;
+using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces.Jwt;
 using MemoryTrave.Application.Interfaces.User;
-using MemoryTrave.Application.Mapping;
 using MemoryTrave.Domain.Exceptions;
 using MemoryTrave.Domain.Interfaces;
 
@@ -11,7 +11,8 @@ namespace MemoryTrave.Application.Services.User;
 public class UserService(
     IUserRepository userRepository,
     IFriendshipRepository friendRepository,
-    IJwtService jwtService) : IUserService
+    IJwtService jwtService,
+    IMapper mapper) : IUserService
 {
     public async Task<AuthorizationResponseDto> Authorization(AuthorizationDto authUser)
     {
@@ -60,7 +61,7 @@ public class UserService(
         if (isExist)
             throw new AlreadyAddedException("This email");
         
-        var user = UserMapping.MapFromRegistrationDto(regUser);
+        var user =  mapper.Map<Domain.Models.User>(regUser);
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(regUser.Password);
         user.Id = Guid.NewGuid();
 
@@ -91,7 +92,7 @@ public class UserService(
         if (user == null)
             throw new NotFoundException("User");
         
-        var response = UserMapping.MapToGetProfileDto(user);
+        var response = mapper.Map<GetProfileDto>(user);
 
         var friends = await friendRepository.GetAllFriends(user.Id);
         response.FriendsCount = friends.Count;
@@ -109,8 +110,9 @@ public class UserService(
             return [];
         
         var blockUsers = await userRepository.GetBlockUsers(user.BlockedUsers);
-
-        return blockUsers.Select(UserMapping.MapToGetUserDto).ToList();
+        var response = mapper.Map<List<GetUserDto>>(blockUsers);
+        
+        return response;
     }
 
     public async Task Delete(Guid userId)
