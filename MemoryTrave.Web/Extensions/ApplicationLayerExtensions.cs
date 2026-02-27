@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
+using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Application.Interfaces.User;
 using MemoryTrave.Application.Mapping;
+using MemoryTrave.Application.Services;
 using MemoryTrave.Application.Services.User;
 using MemoryTrave.Application.Validators.Requests.User;
 
@@ -15,6 +17,7 @@ public static class ApplicationLayerExtensions
             cfg => { }, 
             typeof(UserMappingProfile).Assembly);
 
+        services.AddScoped<IValidationService, ValidationService>();
         services.AddScoped<IUserService, UserService>();
     }
 }
