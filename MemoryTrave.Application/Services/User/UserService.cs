@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
+using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Application.Interfaces.Jwt;
 using MemoryTrave.Application.Interfaces.User;
-using MemoryTrave.Domain.Exceptions;
+using MemoryTrave.Domain.Common;
 using MemoryTrave.Domain.Interfaces;
 
 namespace MemoryTrave.Application.Services.User;
@@ -12,54 +14,71 @@ public class UserService(
     IUserRepository userRepository,
     IFriendshipRepository friendRepository,
     IJwtService jwtService,
-    IMapper mapper) : IUserService
+    IMapper mapper,
+    IValidationService validationService) : IUserService
 {
-    public async Task<AuthorizationResponseDto> Authorization(AuthorizationDto authUser)
+    public async Task<Result<AuthorizationResponseDto>> Authorization(AuthorizationDto authUser)
     {
-        var user = await userRepository.GetByEmailForAuth(authUser.Email);
+        var validResult = await validationService.Validate(authUser);
+        if (!validResult.IsSuccess)
+            return Result<AuthorizationResponseDto>.Failure(validResult.Error, validResult.ErrorCode);
         
+        var user = await userRepository.GetByEmailForAuth(authUser.Email);
+
         if (user == null)
-            throw new UnAuthorizedException("User");
+            return Result<AuthorizationResponseDto>.Failure($"User with email: {authUser.Email} not found",
+                ErrorCode.NotFound);
         
         if(user.IsBlocked)
-            throw new UserBannedException();
+            return Result<AuthorizationResponseDto>.Failure($"User is blocked",
+                ErrorCode.UserBanned);
         
         if(!BCrypt.Net.BCrypt.Verify(authUser.Password, user.PasswordHash))
-            throw new UnAuthorizedException("Password");
+            return Result<AuthorizationResponseDto>.Failure($"Invalid password",
+                ErrorCode.Unauthorized);
         
         var token = jwtService.GenerateJwt(user);
 
-        var response = new AuthorizationResponseDto()
+        var resultDto = new AuthorizationResponseDto()
         {
             JwtToken = token,
         };
+        var response = Result<AuthorizationResponseDto>.Success(resultDto);
         
         return response;
     }
     
-    public async Task<PrivateKeyResponseDto> GetPrivateKey(Guid userId)
+    public async Task<Result<PrivateKeyResponseDto>> GetPrivateKey(Guid userId)
     {
         var isExist = await userRepository.UserExistsById(userId);
         if (!isExist)
-            throw new NotFoundException("User");
+            return Result<PrivateKeyResponseDto>.Failure($"User not found",
+                ErrorCode.NotFound);
         
         var encryptedPrivateKey = await userRepository.GetKeyById(userId);
         
         if(encryptedPrivateKey == null)
-            throw new NotFoundException("PrivateKey");
+            return Result<PrivateKeyResponseDto>.Failure($"Private key not found",
+                ErrorCode.NotFound);
 
-        var response = new PrivateKeyResponseDto()
+        var resultDto = new PrivateKeyResponseDto()
         {
             EncryptedPrivateKey = encryptedPrivateKey
         };
+        var response = Result<PrivateKeyResponseDto>.Success(resultDto);
+        
         return response;
     }
 
-    public async Task<AuthorizationResponseDto> Registration(RegistrationDto regUser)
+    public async Task<Result<AuthorizationResponseDto>> Registration(RegistrationDto regUser)
     {
+        var validResult = await validationService.Validate(regUser);
+        if (!validResult.IsSuccess)
+            return Result<AuthorizationResponseDto>.Failure(validResult.Error, validResult.ErrorCode);
+        
         var isExist = await userRepository.UserExistsByEmail(regUser.Email);
         if (isExist)
-            throw new AlreadyAddedException("This email");
+            return Result<AuthorizationResponseDto>.Failure("Email already exists", ErrorCode.AlreadyExists);
         
         var user =  mapper.Map<Domain.Models.User>(regUser);
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(regUser.Password);
@@ -69,58 +88,66 @@ public class UserService(
         
         var token = jwtService.GenerateJwt(user);
 
-        var response = new AuthorizationResponseDto()
+        var resultDto = new AuthorizationResponseDto()
         {
             JwtToken = token,
         };
+        var response = Result<AuthorizationResponseDto>.Success(resultDto);
         
         return response;
     }
     
-    public async Task AddKeys(AddKeysDto keys, Guid userId)
+    public async Task<Result> AddKeys(AddKeysDto keys, Guid userId)
     {
+        var validResult = await validationService.Validate(keys);
+        if (!validResult.IsSuccess)
+           return Result.Failure(validResult.Error, validResult.ErrorCode);
+        
         var isExist = await userRepository.UserExistsById(userId);
         if (!isExist)
-            throw new NotFoundException("User");
+            return Result.Failure("User not found", ErrorCode.NotFound);
         
         await userRepository.AddKey(userId, keys.PublicKey, keys.EncryptedPrivateKey);
+        return Result.Success();
     }
     
-    public async Task<GetProfileDto> GetProfile(Guid userId)
+    public async Task<Result<GetProfileDto>> GetProfile(Guid userId)
     {
         var user = await userRepository.GetByIdWithArticles(userId);
         if (user == null)
-            throw new NotFoundException("User");
+            return Result<GetProfileDto>.Failure("User not found", ErrorCode.NotFound);
         
-        var response = mapper.Map<GetProfileDto>(user);
+        var resultDto = mapper.Map<GetProfileDto>(user);
 
         var friends = await friendRepository.GetAllFriends(user.Id);
-        response.FriendsCount = friends.Count;
+        resultDto.FriendsCount = friends.Count;
+        
+        var response = Result<GetProfileDto>.Success(resultDto);
         
         return response;
     }
 
-    public async Task<List<GetUserDto>> GetBlockUsers(Guid userId)
+    public async Task<Result<List<GetUserDto>>> GetBlockUsers(Guid userId)
     {
         var user = await userRepository.GetUserById(userId);
         if (user == null)
-            throw new NotFoundException("User");
-
-        if (user.BlockedUsers.Count == 0)
-            return [];
+            return Result<List<GetUserDto>>.Failure("User not found", ErrorCode.NotFound);
         
         var blockUsers = await userRepository.GetBlockUsers(user.BlockedUsers);
-        var response = mapper.Map<List<GetUserDto>>(blockUsers);
+        var resultDto = mapper.Map<List<GetUserDto>>(blockUsers);
         
+        var response = Result<List<GetUserDto>>.Success(resultDto);
+
         return response;
     }
 
-    public async Task Delete(Guid userId)
+    public async Task<Result> Delete(Guid userId)
     {
         var isExists = await userRepository.UserExistsById(userId);
         if (!isExists)
-            throw new NotFoundException("User");
+            return Result.Failure("User not found", ErrorCode.NotFound);
         
         await userRepository.Delete(userId);
+        return Result.Success();
     }
 }
