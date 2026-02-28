@@ -4,6 +4,7 @@ using MemoryTrave.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MemoryTrave.Infrastructure.Migrations
 {
     [DbContext(typeof(MemoryTraveDbContext))]
-    partial class MemoryTraveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260228171008_AddCreatedAtIntoArticle")]
+    partial class AddCreatedAtIntoArticle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

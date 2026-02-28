@@ -7,6 +7,7 @@ public class Article
     public Guid Id { get; set; }
 
     public VisibilityEnum Visibility { get; set; } = VisibilityEnum.Private;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime LastChange { get; set; } = DateTime.UtcNow;
 
     public string? EncryptedPreviewData { get; set; } = null;
