@@ -51,6 +51,9 @@ public class ArticleService(
         if (!validResult.IsSuccess)
             return Result.Failure(validResult.Error, validResult.ErrorCode);
         
+        if(dto.EncryptedKeys.All(k => k.UserId != authorId))
+            return Result.Failure("Invalid keys", ErrorCode.InvalidInput);
+        
         var article = mapper.Map<Domain.Models.Article>(dto);
         article.Id = Guid.NewGuid();
         article.Visibility = VisibilityEnum.Private;
@@ -62,7 +65,10 @@ public class ArticleService(
         
         var encryptedKeys = dto.EncryptedKeys.Select(mapper.Map<ArticleAccess>).ToList();
         foreach (var articleAccess in encryptedKeys)
+        {
+            articleAccess.Id = Guid.NewGuid();
             articleAccess.ArticleId = articleId;
+        }
         await accessRepository.AddList(encryptedKeys);
         
         return Result.Success();
@@ -107,6 +113,11 @@ public class ArticleService(
             upArticle.PhotosUrls = null;
 
             var encryptedKeys = dto.EncryptedKeys.Select(mapper.Map<ArticleAccess>).ToList();
+            foreach (var aa in encryptedKeys)
+            {
+                aa.Id =  Guid.NewGuid();
+                aa.ArticleId = articleId;
+            }
             await accessRepository.Sync(articleId, encryptedKeys);
         }
         else
