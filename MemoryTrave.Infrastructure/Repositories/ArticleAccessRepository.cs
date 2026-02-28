@@ -36,7 +36,10 @@ public class ArticleAccessRepository(MemoryTraveDbContext context) : IArticleAcc
         if (usersToAdd.Count != 0)
         {
             foreach (var access in usersToAdd)
+            {
+                access.Id = Guid.NewGuid();
                 access.ArticleId = articleId;
+            }
             await context.ArticleAccesses.AddRangeAsync(usersToAdd);
         }
         
