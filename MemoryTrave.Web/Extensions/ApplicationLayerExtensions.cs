@@ -5,7 +5,6 @@ using MemoryTrave.Application.Interfaces.User;
 using MemoryTrave.Application.Mapping;
 using MemoryTrave.Application.Services;
 using MemoryTrave.Application.Services.Article;
-using MemoryTrave.Application.Services.Article.Access;
 using MemoryTrave.Application.Services.User;
 using MemoryTrave.Application.Validators.Requests.User;
 
@@ -21,7 +20,6 @@ public static class ApplicationLayerExtensions
             typeof(UserMappingProfile).Assembly);
 
         services.AddScoped<IValidationService, ValidationService>();
-        services.AddScoped<IArticleAccessService, ArticleAccessService>();
         services.AddScoped<IArticleService, ArticleService>();
         services.AddScoped<IUserService, UserService>();
     }
