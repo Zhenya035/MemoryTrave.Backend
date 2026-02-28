@@ -5,37 +5,37 @@ namespace MemoryTrave.Web.Controllers.Location;
 
 [Route("locations")]
 [Authorize]
-public class LocationController : BaseController
+public class LocationController(IWebHostEnvironment env) : BaseController(env)
 {
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> GetAll()
     {
-        return Success();
+        throw new Exception();
     }
 
     [HttpGet("{locationId}")]
     [AllowAnonymous]
     public async Task<IActionResult> Get(Guid locationId)
     {
-        return Success();
+        throw new Exception();
     }
 
     [HttpPost]
     public async Task<IActionResult> Add()
     {
-        return Success();
+        throw new Exception();
     }
 
     [HttpPut]
     public async Task<IActionResult> Update()
     {
-        return Success();
+        throw new Exception();
     }
 
     [HttpDelete]
     public async Task<IActionResult> Delete()
     {
-        return Success();
+        throw new Exception();
     }
 }

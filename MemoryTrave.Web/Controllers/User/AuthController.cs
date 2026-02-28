@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MemoryTrave.Web.Controllers.User;
 
 [Route("users/auth")]
-public class AuthController(IUserService service) : BaseController
+public class AuthController(IUserService service, IWebHostEnvironment env) : BaseController(env)
 {
     [HttpGet("keys/private")]
     [Authorize]

@@ -8,7 +8,7 @@ namespace MemoryTrave.Web.Controllers.Article;
 
 [Route("articles/access")]
 [Authorize]
-public class ArticleAccessController(IArticleAccessService service) : BaseController
+public class ArticleAccessController(IArticleAccessService service, IWebHostEnvironment env) : BaseController(env)
 {
     [HttpPost("add/list")]
     public async Task<IActionResult> AddList(AddListAccessDto dto)

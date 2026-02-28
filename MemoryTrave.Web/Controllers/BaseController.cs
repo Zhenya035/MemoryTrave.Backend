@@ -5,17 +5,19 @@ using Microsoft.AspNetCore.Mvc;
 namespace MemoryTrave.Web.Controllers;
 
 [ApiController]
-public abstract class BaseController() : ControllerBase
+public abstract class BaseController(IWebHostEnvironment env) : ControllerBase
 {
    protected IActionResult HandleResult<T>(Result<T> result)
    {
       if (result.IsSuccess)
          return Ok(result.Data);
       
+      var detail = env.IsDevelopment() ? result.Error : "An error occurred.";
       return StatusCode((int)result.ErrorCode!, new ProblemDetails
       {
+         Status = (int)result.ErrorCode,
          Title = GetTitleForStatus((int)result.ErrorCode),
-         Detail = result.Error,
+         Detail = detail,
          Instance = HttpContext.Request.Path
       });
    }
@@ -24,12 +26,13 @@ public abstract class BaseController() : ControllerBase
    {
       if (result.IsSuccess)
          return NoContent();
-      
+
+      var detail = env.IsDevelopment() ? result.Error : "An error occurred.";
       return StatusCode((int)result.ErrorCode, new ProblemDetails
       {
          Status = (int)result.ErrorCode,
          Title = GetTitleForStatus((int)result.ErrorCode),
-         Detail = result.Error,
+         Detail = detail,
          Instance = HttpContext.Request.Path
       });
    }

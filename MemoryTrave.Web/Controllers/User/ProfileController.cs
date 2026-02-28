@@ -7,7 +7,7 @@ namespace MemoryTrave.Web.Controllers.User;
 [ApiController]
 [Route("users/profile")]
 [Authorize]
-public class ProfileController(IUserService service) : BaseController
+public class ProfileController(IUserService service, IWebHostEnvironment env) : BaseController(env)
 {
     [HttpGet("my")]
     public async Task<IActionResult> GetMyProfile()

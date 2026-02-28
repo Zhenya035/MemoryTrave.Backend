@@ -5,29 +5,29 @@ namespace MemoryTrave.Web.Controllers.Friends;
 
 [Route("friends/requests")]
 [Authorize]
-public class FriendRequestController : BaseController
+public class FriendRequestController(IWebHostEnvironment env) : BaseController(env)
 {
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Success();
+        throw new Exception();
     }
 
     [HttpPost("confirm")]
     public async Task<IActionResult> Confirm()
     {
-        return Success();
+        throw new Exception();
     }
 
     [HttpDelete("cancel")]
     public async Task<IActionResult> Cancel()
     {
-        return Success();
+        throw new Exception();
     }
 
     [HttpDelete("delete")]
     public async Task<IActionResult> Delete()
     {
-        return Success();
+        throw new Exception();
     }
 }

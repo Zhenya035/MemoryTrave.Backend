@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MemoryTrave.Web.Controllers.User;
 
 [Route("users")]
-public class UserController(IUserService service) : BaseController
+public class UserController(IUserService service, IWebHostEnvironment env) : BaseController(env)
 {
     [HttpDelete]
     public async Task<IActionResult> Delete()
