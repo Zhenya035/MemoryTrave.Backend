@@ -10,9 +10,6 @@ public class AddAccessDtoValidator : AbstractValidator<AddAccessDto>
         RuleFor(r => r.UserId)
             .NotEmpty().WithMessage("UserId is required");
         
-        RuleFor(r => r.ArticleId)
-            .NotEmpty().WithMessage("ArticleId is required");
-        
         RuleFor(r => r.EncryptedKey)
             .NotEmpty().WithMessage("EncryptedKey is required")
             .Length(152).WithMessage("EncryptedKey must be exactly 152 characters long");

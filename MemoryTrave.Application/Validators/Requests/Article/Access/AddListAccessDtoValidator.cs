@@ -15,7 +15,7 @@ public class AddListAccessDtoValidator : AbstractValidator<AddListAccessDto>
         
         RuleFor(r => r.Items)
             .Must(items => items
-                .GroupBy(i => new {i.UserId, i.ArticleId})
+                .GroupBy(i => i.UserId)
                 .All(g => g.Count() == 1))
             .WithMessage("The list of access requests must not contain duplicates.");
     }
