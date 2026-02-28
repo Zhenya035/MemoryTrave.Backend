@@ -35,7 +35,7 @@ public class UserService(
         
         if(!BCrypt.Net.BCrypt.Verify(authUser.Password, user.PasswordHash))
             return Result<AuthorizationResponseDto>.Failure($"Invalid password",
-                ErrorCode.Unauthorized);
+                ErrorCode.Forbidden);
         
         var token = jwtService.GenerateJwt(user);
 
@@ -50,7 +50,7 @@ public class UserService(
     
     public async Task<Result<PrivateKeyResponseDto>> GetPrivateKey(Guid userId)
     {
-        var isExist = await userRepository.UserExistsById(userId);
+        var isExist = await userRepository.ExistsById(userId);
         if (!isExist)
             return Result<PrivateKeyResponseDto>.Failure($"User not found",
                 ErrorCode.NotFound);
@@ -76,7 +76,7 @@ public class UserService(
         if (!validResult.IsSuccess)
             return Result<AuthorizationResponseDto>.Failure(validResult.Error, validResult.ErrorCode);
         
-        var isExist = await userRepository.UserExistsByEmail(regUser.Email);
+        var isExist = await userRepository.ExistsByEmail(regUser.Email);
         if (isExist)
             return Result<AuthorizationResponseDto>.Failure("Email already exists", ErrorCode.AlreadyExists);
         
@@ -103,7 +103,7 @@ public class UserService(
         if (!validResult.IsSuccess)
            return Result.Failure(validResult.Error, validResult.ErrorCode);
         
-        var isExist = await userRepository.UserExistsById(userId);
+        var isExist = await userRepository.ExistsById(userId);
         if (!isExist)
             return Result.Failure("User not found", ErrorCode.NotFound);
         
@@ -129,7 +129,7 @@ public class UserService(
 
     public async Task<Result<List<GetUserDto>>> GetBlockUsers(Guid userId)
     {
-        var user = await userRepository.GetUserById(userId);
+        var user = await userRepository.GetById(userId);
         if (user == null)
             return Result<List<GetUserDto>>.Failure("User not found", ErrorCode.NotFound);
         
@@ -143,7 +143,7 @@ public class UserService(
 
     public async Task<Result> Delete(Guid userId)
     {
-        var isExists = await userRepository.UserExistsById(userId);
+        var isExists = await userRepository.ExistsById(userId);
         if (!isExists)
             return Result.Failure("User not found", ErrorCode.NotFound);
         

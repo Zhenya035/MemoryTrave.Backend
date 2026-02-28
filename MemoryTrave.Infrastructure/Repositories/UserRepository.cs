@@ -17,7 +17,7 @@ public class UserRepository(MemoryTraveDbContext context) : IUserRepository
             .Include(u => u.Articles)
             .FirstOrDefaultAsync(u => u.Id == userId);
 
-    public async Task<User?> GetUserById(Guid userId) =>
+    public async Task<User?> GetById(Guid userId) =>
         await context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Id == userId);
@@ -50,7 +50,7 @@ public class UserRepository(MemoryTraveDbContext context) : IUserRepository
     { 
         await context.Users
             .Where(u => u.Id == userId)
-            .ExecuteUpdateAsync(updSetBuild => updSetBuild
+            .ExecuteUpdateAsync(p => p
                 .SetProperty(u => u.PublicKey, publicKey)
                 .SetProperty(u => u.EncryptedPrivateKey, encryptedPrivateKey));
     }
@@ -74,12 +74,12 @@ public class UserRepository(MemoryTraveDbContext context) : IUserRepository
             .ExecuteDeleteAsync();
     }
 
-    public async Task<bool> UserExistsById(Guid id) =>
+    public async Task<bool> ExistsById(Guid id) =>
         await context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Id == id) != null;
 
-    public async Task<bool> UserExistsByEmail(string email) =>
+    public async Task<bool> ExistsByEmail(string email) =>
         await context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Email == email) != null;

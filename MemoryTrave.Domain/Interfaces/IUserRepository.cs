@@ -6,7 +6,7 @@ public interface IUserRepository
 {
     public Task<User?> GetByEmailForAuth(string email);
     public Task<User?> GetByIdWithArticles(Guid userId);
-    public Task<User?> GetUserById(Guid userId);
+    public Task<User?> GetById(Guid userId);
     public Task<List<User>> GetBlockUsers(List<Guid> userIds);
     public Task<string?> GetKeyById(Guid id);
     
@@ -15,6 +15,6 @@ public interface IUserRepository
 
     public Task Delete(Guid userId);
     
-    public Task<bool> UserExistsById(Guid id);
-    public Task<bool> UserExistsByEmail(string email);
+    public Task<bool> ExistsById(Guid id);
+    public Task<bool> ExistsByEmail(string email);
 }
