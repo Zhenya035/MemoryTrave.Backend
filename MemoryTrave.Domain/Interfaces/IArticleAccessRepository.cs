@@ -8,7 +8,7 @@ public interface IArticleAccessRepository
     
     public Task Sync(Guid articleId, List<ArticleAccess> articleAccesses);
     
-    public Task DeleteForArticle(Guid id);
+    public Task DeleteForArticle(Guid articleId);
     
     public Task<bool> Exists(Guid articleId, Guid userId);
 }
