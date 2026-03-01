@@ -8,7 +8,7 @@ using MemoryTrave.Domain.Enums;
 using MemoryTrave.Domain.Interfaces;
 using MemoryTrave.Domain.Models;
 
-namespace MemoryTrave.Application.Services.Article;
+namespace MemoryTrave.Application.Services;
 
 public class ArticleService(
     IArticleRepository repository, 
@@ -54,7 +54,7 @@ public class ArticleService(
         if(dto.EncryptedKeys.All(k => k.UserId != authorId))
             return Result.Failure("Invalid keys", ErrorCode.InvalidInput);
         
-        var article = mapper.Map<Domain.Models.Article>(dto);
+        var article = mapper.Map<Article>(dto);
         article.Id = Guid.NewGuid();
         article.Visibility = VisibilityEnum.Private;
         article.CreatedAt = DateTime.UtcNow;
@@ -80,7 +80,7 @@ public class ArticleService(
         if (!validResult.IsSuccess)
             return Result.Failure(validResult.Error, validResult.ErrorCode);
         
-        var article = mapper.Map<Domain.Models.Article>(dto);
+        var article = mapper.Map<Article>(dto);
         article.Id = Guid.NewGuid();
         article.Visibility = VisibilityEnum.Public;
         article.CreatedAt = DateTime.UtcNow;
@@ -104,7 +104,7 @@ public class ArticleService(
         if (dto.Visibility == VisibilityEnum.Private && dto.EncryptedKeys.All(k => k.UserId != article.AuthorId))
             return Result.Failure("Invalid keys", ErrorCode.InvalidInput);
         
-        var upArticle = mapper.Map<Domain.Models.Article>(dto);
+        var upArticle = mapper.Map<Article>(dto);
         upArticle.LastChange = DateTime.UtcNow;
         
         if (upArticle.Visibility == VisibilityEnum.Private)

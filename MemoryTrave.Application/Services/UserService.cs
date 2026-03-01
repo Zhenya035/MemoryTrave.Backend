@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces;
@@ -7,8 +6,9 @@ using MemoryTrave.Application.Interfaces.Jwt;
 using MemoryTrave.Application.Interfaces.User;
 using MemoryTrave.Domain.Common;
 using MemoryTrave.Domain.Interfaces;
+using MemoryTrave.Domain.Models;
 
-namespace MemoryTrave.Application.Services.User;
+namespace MemoryTrave.Application.Services;
 
 public class UserService(
     IUserRepository userRepository,
@@ -80,7 +80,7 @@ public class UserService(
         if (isExist)
             return Result<AuthorizationResponseDto>.Failure("Email already exists", ErrorCode.AlreadyExists);
         
-        var user =  mapper.Map<Domain.Models.User>(regUser);
+        var user =  mapper.Map<User>(regUser);
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(regUser.Password);
         user.Id = Guid.NewGuid();
 
