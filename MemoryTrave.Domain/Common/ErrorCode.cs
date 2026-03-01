@@ -3,8 +3,8 @@
 public enum ErrorCode
 {
     InvalidInput = 400,
-    UserBanned = 401,
-    Unauthorized = 403,
+    Unauthorized = 401,
+    AccessDenied = 403,
     NotFound = 404,
     AlreadyExists = 409
 }

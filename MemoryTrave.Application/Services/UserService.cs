@@ -31,11 +31,11 @@ public class UserService(
         
         if(user.IsBlocked)
             return Result<AuthorizationResponseDto>.Failure($"User is blocked",
-                ErrorCode.UserBanned);
+                ErrorCode.Unauthorized);
         
         if(!BCrypt.Net.BCrypt.Verify(authUser.Password, user.PasswordHash))
             return Result<AuthorizationResponseDto>.Failure($"Invalid password",
-                ErrorCode.Forbidden);
+                ErrorCode.AccessDenied);
         
         var token = jwtService.GenerateJwt(user);
 

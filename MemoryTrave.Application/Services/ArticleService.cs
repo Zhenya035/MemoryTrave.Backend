@@ -37,7 +37,7 @@ public class ArticleService(
 
         var access = article.EncryptedKeys.FirstOrDefault(k => k.UserId == userId);
         if (access == null)
-            return Result<GetArticleBaseDto>.Failure("Access denied", ErrorCode.Forbidden);
+            return Result<GetArticleBaseDto>.Failure("Access denied", ErrorCode.AccessDenied);
         
         var privateArticleDto = mapper.Map<GetPrivateArticleDto>(article);
         privateArticleDto.EncryptedKey = access.EncryptedKey;

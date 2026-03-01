@@ -56,7 +56,7 @@ public class FriendRequestService(
         if(request == null)
             return Result.Failure("Request not found", ErrorCode.NotFound);
         if(request.ToUserId != userId)
-            return Result.Failure("User is not the recipient", ErrorCode.Forbidden);
+            return Result.Failure("User is not the recipient", ErrorCode.AccessDenied);
 
         var friendshipExist = await friendshipRepository.ExistByUsers(request.FromUserId, request.ToUserId);
         if (friendshipExist)
@@ -80,7 +80,7 @@ public class FriendRequestService(
         if(request == null)
             return Result.Failure("Request not found", ErrorCode.NotFound);
         if(request.FromUserId != userId && request.ToUserId != userId)
-            return Result.Failure("User is not in the request", ErrorCode.Forbidden);
+            return Result.Failure("User is not in the request", ErrorCode.AccessDenied);
         
         await repository.Delete(requestId);
         return Result.Success();
