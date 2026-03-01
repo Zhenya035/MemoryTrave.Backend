@@ -1,5 +1,4 @@
 ﻿using MemoryTrave.Application.Dto.Requests.Article.Access;
-using MemoryTrave.Application.Dto.Responses.Article.Access;
 using MemoryTrave.Domain.Enums;
 
 namespace MemoryTrave.Application.Dto.Requests.Article;
