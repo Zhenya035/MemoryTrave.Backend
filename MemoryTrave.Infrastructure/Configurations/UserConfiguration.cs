@@ -43,12 +43,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasMany<Friendship>()
-            .WithOne()
+            .WithOne(f => f.User)
             .HasForeignKey(f => f.UserId)
             .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasMany<Friendship>()
-            .WithOne()
+            .WithOne(f => f.Friend)
             .HasForeignKey(f => f.FriendId)
             .OnDelete(DeleteBehavior.Restrict);
     }
