@@ -1,21 +1,28 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MemoryTrave.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MemoryTrave.Web.Controllers;
 
 [Route("friends")]
 [Authorize]
-public class FriendshipController(IWebHostEnvironment env) : BaseController(env)
+public class FriendshipController(IWebHostEnvironment env, IFriendshipService service) : BaseController(env)
 {
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        throw new Exception();
+        var userId = GetCurrentUserId();
+        
+        var result = await service.GetAll(userId);
+        return HandleResult(result);
     }
 
-    [HttpDelete("{friendId:guid}")]
-    public async Task<IActionResult> Delete(Guid friendId)
+    [HttpDelete("{friendshipId:guid}")]
+    public async Task<IActionResult> Delete(Guid friendshipId)
     {
-        throw new Exception();
+        var userId = GetCurrentUserId();
+        
+        var result = await service.Delete(userId, friendshipId);
+        return HandleResult(result);
     }
 }
