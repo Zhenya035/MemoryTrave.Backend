@@ -1,4 +1,4 @@
-﻿using MemoryTrave.Application.Interfaces.User;
+﻿using MemoryTrave.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MemoryTrave.Web.Controllers.User;

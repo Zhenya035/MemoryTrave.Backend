@@ -1,7 +1,7 @@
 ﻿using MemoryTrave.Application.Dto.Responses.Friend;
 using MemoryTrave.Domain.Common;
 
-namespace MemoryTrave.Application.Interfaces.Friend;
+namespace MemoryTrave.Application.Interfaces;
 
 public interface IFriendRequestService
 {

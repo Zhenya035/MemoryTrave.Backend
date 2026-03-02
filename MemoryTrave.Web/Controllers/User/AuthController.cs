@@ -1,5 +1,5 @@
 ﻿using MemoryTrave.Application.Dto.Requests.User;
-using MemoryTrave.Application.Interfaces.User;
+using MemoryTrave.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

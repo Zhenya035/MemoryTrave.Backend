@@ -2,7 +2,7 @@
 using MemoryTrave.Application.Dto.Responses.Article.GetArticle;
 using MemoryTrave.Domain.Common;
 
-namespace MemoryTrave.Application.Interfaces.Article;
+namespace MemoryTrave.Application.Interfaces;
 
 public interface IArticleService
 {

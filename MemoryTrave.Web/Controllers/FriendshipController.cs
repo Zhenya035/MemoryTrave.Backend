@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MemoryTrave.Web.Controllers.Friends;
+namespace MemoryTrave.Web.Controllers;
 
 [Route("friends")]
 [Authorize]

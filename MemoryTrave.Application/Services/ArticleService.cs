@@ -2,7 +2,6 @@
 using MemoryTrave.Application.Dto.Requests.Article;
 using MemoryTrave.Application.Dto.Responses.Article.GetArticle;
 using MemoryTrave.Application.Interfaces;
-using MemoryTrave.Application.Interfaces.Article;
 using MemoryTrave.Domain.Common;
 using MemoryTrave.Domain.Enums;
 using MemoryTrave.Domain.Interfaces;

@@ -2,7 +2,7 @@
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Domain.Common;
 
-namespace MemoryTrave.Application.Interfaces.User;
+namespace MemoryTrave.Application.Interfaces;
 
 public interface IUserService
 {

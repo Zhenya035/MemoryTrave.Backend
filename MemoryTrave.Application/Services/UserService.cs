@@ -2,8 +2,6 @@
 using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces;
-using MemoryTrave.Application.Interfaces.Jwt;
-using MemoryTrave.Application.Interfaces.User;
 using MemoryTrave.Domain.Common;
 using MemoryTrave.Domain.Interfaces;
 using MemoryTrave.Domain.Models;

@@ -1,9 +1,9 @@
 ﻿using MemoryTrave.Application.Dto.Requests;
-using MemoryTrave.Application.Interfaces.Friend;
+using MemoryTrave.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MemoryTrave.Web.Controllers.Friends;
+namespace MemoryTrave.Web.Controllers;
 
 [Route("friends/requests")]
 [Authorize]

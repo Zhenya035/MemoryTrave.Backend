@@ -1,10 +1,9 @@
 ﻿using MemoryTrave.Application.Dto.Requests.Article;
-using MemoryTrave.Application.Dto.Responses.Article;
-using MemoryTrave.Application.Interfaces.Article;
+using MemoryTrave.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MemoryTrave.Web.Controllers.Article;
+namespace MemoryTrave.Web.Controllers;
 
 [Route("articles")]
 [Authorize]

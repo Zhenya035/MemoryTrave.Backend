@@ -1,8 +1,5 @@
 ﻿using FluentValidation;
 using MemoryTrave.Application.Interfaces;
-using MemoryTrave.Application.Interfaces.Article;
-using MemoryTrave.Application.Interfaces.Friend;
-using MemoryTrave.Application.Interfaces.User;
 using MemoryTrave.Application.Mapping;
 using MemoryTrave.Application.Services;
 using MemoryTrave.Application.Validators.Requests.User;

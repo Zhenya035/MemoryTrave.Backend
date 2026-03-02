@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MemoryTrave.Application.Dto.Responses.Friend;
-using MemoryTrave.Application.Interfaces.Friend;
+using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Domain.Common;
 using MemoryTrave.Domain.Interfaces;
 using MemoryTrave.Domain.Models;
