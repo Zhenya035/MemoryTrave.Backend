@@ -32,6 +32,10 @@ public class FriendRequestService(
         if (fromId == toId)
             return Result.Failure("User cannot send a request to himself", ErrorCode.InvalidInput);
         
+        var toUserExist = await userRepository.ExistsById(toId);
+        if (!toUserExist)
+            return Result.Failure("User not found", ErrorCode.NotFound);
+        
         var requestExist = await repository.IsExistsByUsers(fromId, toId);
         if (requestExist)
             return Result.Failure("Request is already created", ErrorCode.AlreadyExists);
