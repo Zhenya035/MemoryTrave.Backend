@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MemoryTrave.Application.Dto.Requests;
 using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces;
@@ -137,6 +138,75 @@ public class UserService(
         var response = Result<List<GetUserDto>>.Success(resultDto);
 
         return response;
+    }
+
+    public async Task<Result<List<GetUserDto>>> GetUsersWithoutMe(Guid userId)
+    {
+        var user = await userRepository.GetById(userId);
+        if (user == null)
+            return Result<List<GetUserDto>>.Failure("User not found", ErrorCode.NotFound);
+        
+        var users = await userRepository.GetUsersWithoutMe(userId);
+
+        var result = users.Where(u => !user.BlockedUsers.Contains(u.Id)).ToList();
+        
+        var resulDto = mapper.Map<List<GetUserDto>>(result);
+        
+        var response = Result<List<GetUserDto>>.Success(resulDto);
+        
+        return response;
+    }
+
+    public async Task<Result> Block(ListIdDto blockIds, Guid userId)
+    {
+        var isValid = await validationService.Validate(blockIds);
+        if (!isValid.IsSuccess)
+            return Result.Failure(isValid.Error, ErrorCode.InvalidInput);
+        
+        if (blockIds.Ids.Contains(userId))
+            return Result.Failure("Invalid block list", ErrorCode.InvalidInput);
+        
+        var isExist = await userRepository.ExistsById(userId);
+        if (!isExist)
+            return Result.Failure("User not found", ErrorCode.NotFound);
+        
+        foreach (var id in blockIds.Ids)
+        {
+            isExist = await userRepository.ExistsById(id);
+            if (!isExist)
+                return Result.Failure("User from list not found", ErrorCode.NotFound);
+        }
+        
+        var uniqueIds = blockIds.Ids.Distinct().ToList();
+        
+        await userRepository.Block(uniqueIds, userId);
+        return Result.Success();
+    }
+
+    public async Task<Result> Unblock(ListIdDto unblockIds, Guid userId)
+    {
+        var isValid = await validationService.Validate(unblockIds);
+        if (!isValid.IsSuccess)
+            return Result.Failure(isValid.Error, ErrorCode.InvalidInput);
+        
+        if (unblockIds.Ids.Contains(userId))
+            return Result.Failure("Invalid block list", ErrorCode.InvalidInput);
+        
+        var isExist = await userRepository.ExistsById(userId);
+        if (!isExist)
+            return Result.Failure("User not found", ErrorCode.NotFound);
+
+        foreach (var id in unblockIds.Ids)
+        {
+            isExist = await userRepository.ExistsById(id);
+            if (!isExist)
+                return Result.Failure("User from list not found", ErrorCode.NotFound);
+        }
+        
+        var uniqueIds = unblockIds.Ids.Distinct().ToList();
+        
+        await userRepository.Unblock(uniqueIds, userId);
+        return Result.Success();
     }
 
     public async Task<Result> Delete(Guid userId)

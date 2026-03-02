@@ -1,4 +1,5 @@
-﻿using MemoryTrave.Application.Dto.Requests.User;
+﻿using MemoryTrave.Application.Dto.Requests;
+using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Domain.Common;
 
@@ -18,5 +19,8 @@ public interface IUserService
     public Task<Result<GetProfileDto>> GetProfile(Guid userId);
     public Task<Result<List<GetUserDto>>> GetBlockUsers(Guid userId);
     
+    public Task<Result<List<GetUserDto>>> GetUsersWithoutMe(Guid userId);
+    public Task<Result> Block(ListIdDto blockIds, Guid userId);
+    public Task<Result> Unblock(ListIdDto unblockIds, Guid userId);
     public Task<Result> Delete(Guid userId);
 }

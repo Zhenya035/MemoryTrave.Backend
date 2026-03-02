@@ -38,6 +38,12 @@ public class UserRepository(MemoryTraveDbContext context) : IUserRepository
         return user?.EncryptedPrivateKey;
     }
 
+    public async Task<List<User>> GetUsersWithoutMe(Guid userId) =>
+        await context.Users
+            .AsNoTracking()
+            .Where(u => u.Id != userId)
+            .ToListAsync();
+    
     public async Task<User> Registration(User user)
     {
         var newUser = await context.Users.AddAsync(user);
@@ -53,6 +59,34 @@ public class UserRepository(MemoryTraveDbContext context) : IUserRepository
             .ExecuteUpdateAsync(p => p
                 .SetProperty(u => u.PublicKey, publicKey)
                 .SetProperty(u => u.EncryptedPrivateKey, encryptedPrivateKey));
+    }
+
+    public async Task Block(List<Guid> blockIds, Guid userId)
+    {
+        var user = await context.Users
+            .AsNoTracking()
+            .FirstAsync(u => u.Id == userId);
+
+        var updatedBlocks = user.BlockedUsers.Concat(blockIds).ToList();
+        
+        await  context.Users
+            .Where(u => u.Id == userId)
+            .ExecuteUpdateAsync(p =>p
+                .SetProperty(u => u.BlockedUsers, updatedBlocks));
+    }
+
+    public async Task Unblock(List<Guid> unblockIds, Guid userId)
+    {
+        var user = await context.Users
+            .AsNoTracking()
+            .FirstAsync(u => u.Id == userId);
+
+        var updatedBlocks = user.BlockedUsers.Where(id => !unblockIds.Contains(id)).ToList();
+        
+        await  context.Users
+            .Where(u => u.Id == userId)
+            .ExecuteUpdateAsync(p =>p
+                .SetProperty(u => u.BlockedUsers, updatedBlocks));
     }
 
     public async Task Delete(Guid userId)
