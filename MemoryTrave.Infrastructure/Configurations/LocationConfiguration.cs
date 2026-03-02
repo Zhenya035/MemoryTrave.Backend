@@ -16,7 +16,10 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(l=>l.Longitude).IsRequired();
         builder.Property(l=>l.Geohash)
             .IsRequired()
-            .HasMaxLength(12);
+            .HasMaxLength(8);
+        
+        builder.HasIndex(l => new {l.Type, l.Geohash})
+            .HasDatabaseName("IX_Location_Type_Geohash");
         
         builder.HasMany(l => l.Articles)
             .WithOne(a => a.Location)

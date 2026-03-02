@@ -1,10 +1,13 @@
-﻿namespace MemoryTrave.Domain.Models;
+﻿using MemoryTrave.Domain.Enums;
+
+namespace MemoryTrave.Domain.Models;
 
 public class Location
 {
     public Guid  Id { get; set; }
     
     public string Name { get; set; } = string.Empty;
+    public LocationTypeEnum Type { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public string Geohash { get; set; } =  string.Empty;
