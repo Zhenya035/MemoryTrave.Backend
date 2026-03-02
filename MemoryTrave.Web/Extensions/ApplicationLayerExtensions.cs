@@ -18,6 +18,7 @@ public static class ApplicationLayerExtensions
         services.AddScoped<IValidationService, ValidationService>();
         services.AddScoped<IArticleService, ArticleService>();
         services.AddScoped<IFriendRequestService, FriendRequestService>();
+        services.AddScoped<IFriendshipService, FriendshipService>();
         services.AddScoped<IUserService, UserService>();
     }
 }

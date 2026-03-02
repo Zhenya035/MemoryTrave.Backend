@@ -1,0 +1,39 @@
+﻿using AutoMapper;
+using MemoryTrave.Application.Dto.Responses.Friend;
+using MemoryTrave.Application.Interfaces;
+using MemoryTrave.Domain.Common;
+using MemoryTrave.Domain.Interfaces;
+
+namespace MemoryTrave.Application.Services;
+
+public class FriendshipService(
+    IFriendshipRepository repository,
+    IUserRepository userRepository,
+    IMapper mapper) : IFriendshipService
+{
+    public async Task<Result<List<GetFriendshipDto>>> GetAll(Guid userId)
+    {
+        var isExist = await userRepository.ExistsById(userId);
+        if (!isExist)
+            return Result<List<GetFriendshipDto>>.Failure("User not found", ErrorCode.NotFound);
+            
+        var friendship = await repository.GetAllFriends(userId);
+        
+        var result = mapper.Map<List<GetFriendshipDto>>(friendship,
+            opt => opt.Items["UserId"] = userId);
+        
+        return Result<List<GetFriendshipDto>>.Success(result);
+    }
+
+    public async Task<Result> Delete(Guid userId, Guid friendshipId)
+    {
+        var friendship = await repository.GetById(friendshipId);
+        if(friendship == null)
+            return Result.Failure("Friendship not found", ErrorCode.NotFound);
+        if (friendship.UserId != userId && friendship.FriendId != userId)
+            return Result.Failure("User is not in the friendsip", ErrorCode.AccessDenied);
+
+        await repository.Delete(friendshipId);
+        return Result.Success();
+    }
+}
