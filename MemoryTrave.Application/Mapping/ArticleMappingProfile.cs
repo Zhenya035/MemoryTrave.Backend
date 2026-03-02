@@ -33,11 +33,14 @@ public class ArticleMappingProfile : Profile
                 opt => opt.MapFrom(src =>
                     src.Location.Name));
         
-        CreateMap<Article, GetPrivateArticleDto>()
+        CreateMap<Article, GetFullPrivateArticleDto>()
             .IncludeBase<Article, GetArticleBaseDto>()
             .ForMember(dto => dto.EncryptedKey,
                 opt => opt.Ignore());
 
+        CreateMap<Article, GetPreviewPrivateArticle>()
+            .IncludeBase<Article, GetArticleBaseDto>();
+        
         CreateMap<Article, GetPublicArticleDto>()
             .IncludeBase<Article, GetArticleBaseDto>();
         
