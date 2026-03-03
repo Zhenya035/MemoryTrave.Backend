@@ -18,7 +18,7 @@ public class ArticleController(IArticleService service, IWebHostEnvironment env)
         return HandleResult(result);
     }
 
-    [HttpPost("private/add")]
+    [HttpPost("private")]
     public async Task<IActionResult> AddPrivate([FromBody] AddPrivateArticleDto dto)
     {
         var userId = GetCurrentUserId();
@@ -27,7 +27,7 @@ public class ArticleController(IArticleService service, IWebHostEnvironment env)
         return HandleResult(result);
     }
 
-    [HttpPost("public/add")]
+    [HttpPost("public")]
     public async Task<IActionResult> AddPublic([FromBody] AddPublicArticleDto dto)
     {
         var userId = GetCurrentUserId();
@@ -43,7 +43,7 @@ public class ArticleController(IArticleService service, IWebHostEnvironment env)
         return HandleResult(result);
     }
 
-    [HttpDelete("{articleId}/delete")]
+    [HttpDelete("{articleId:guid}")]
     public async Task<IActionResult> Delete(Guid articleId)
     {
         var result = await service.Delete(articleId);
