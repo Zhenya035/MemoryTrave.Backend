@@ -23,7 +23,9 @@ public class ArticleMappingProfile : Profile
                     src.Visibility == VisibilityEnum.Private ? src.EncryptedPreviewData : null))
             .ForMember(dto => dto.Description,
                 opt => opt.MapFrom(src =>
-                    src.Visibility == VisibilityEnum.Public ? src.Description : null));
+                    src.Visibility == VisibilityEnum.Public ? src.Description : null))
+            .ForMember(dto => dto.EncryptedDek,
+                opt => opt.Ignore());
 
         CreateMap<Article, GetArticleBaseDto>()
             .ForMember(dto => dto.AuthorName,

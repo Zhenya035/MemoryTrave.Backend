@@ -4,6 +4,7 @@ using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Domain.Common;
+using MemoryTrave.Domain.Enums;
 using MemoryTrave.Domain.Interfaces;
 using MemoryTrave.Domain.Models;
 
@@ -118,6 +119,20 @@ public class UserService(
         
         var resultDto = mapper.Map<GetProfileDto>(user);
 
+        var access = user.Articles
+            .Where(a => a.Visibility == VisibilityEnum.Private && a.EncryptedKeys != null)
+            .SelectMany(a => a.EncryptedKeys.Where(k => k.UserId == userId)
+                .Select(k => new { a.Id, k.EncryptedKey}))
+            .ToDictionary(x => x.Id, x => x.EncryptedKey);
+        
+        foreach (var article in resultDto.Articles)
+        {
+            if (article.IsPrivate && access.TryGetValue(article.Id, out var key))
+                article.EncryptedDek = key;
+            else
+                article.EncryptedDek = null;
+        }
+        
         var friends = await friendRepository.GetAllFriends(user.Id);
         resultDto.FriendsCount = friends.Count;
         

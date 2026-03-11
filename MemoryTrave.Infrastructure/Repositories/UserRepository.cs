@@ -15,6 +15,9 @@ public class UserRepository(MemoryTraveDbContext context) : IUserRepository
         await context.Users
             .AsNoTracking()
             .Include(u => u.Articles)
+                .ThenInclude(a => a.Location)
+            .Include(u => u.Articles)
+                .ThenInclude(a => a.EncryptedKeys)
             .FirstOrDefaultAsync(u => u.Id == userId);
 
     public async Task<User?> GetById(Guid userId) =>
