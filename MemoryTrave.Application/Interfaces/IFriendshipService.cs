@@ -5,6 +5,6 @@ namespace MemoryTrave.Application.Interfaces;
 
 public interface IFriendshipService
 {
-    public Task<Result<List<GetFriendshipDto>>> GetAll(Guid userId);
+    public Task<Result<List<GetFriendDto>>> GetAll(Guid userId);
     public Task<Result> Delete(Guid userId, Guid friendshipId);
 }

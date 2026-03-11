@@ -11,18 +11,18 @@ public class FriendshipService(
     IUserRepository userRepository,
     IMapper mapper) : IFriendshipService
 {
-    public async Task<Result<List<GetFriendshipDto>>> GetAll(Guid userId)
+    public async Task<Result<List<GetFriendDto>>> GetAll(Guid userId)
     {
         var isExist = await userRepository.ExistsById(userId);
         if (!isExist)
-            return Result<List<GetFriendshipDto>>.Failure("User not found", ErrorCode.NotFound);
+            return Result<List<GetFriendDto>>.Failure("User not found", ErrorCode.NotFound);
             
         var friendship = await repository.GetAllFriends(userId);
         
-        var result = mapper.Map<List<GetFriendshipDto>>(friendship,
+        var result = mapper.Map<List<GetFriendDto>>(friendship,
             opt => opt.Items["UserId"] = userId);
         
-        return Result<List<GetFriendshipDto>>.Success(result);
+        return Result<List<GetFriendDto>>.Success(result);
     }
 
     public async Task<Result> Delete(Guid userId, Guid friendshipId)

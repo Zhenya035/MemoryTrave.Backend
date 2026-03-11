@@ -8,7 +8,7 @@ public class FriendshipMappingProfile : Profile
 {
     public FriendshipMappingProfile()
     {
-        CreateMap<Friendship, GetFriendshipDto>()
+        CreateMap<Friendship, GetFriendDto>()
             .ForMember(dto => dto.FriendName,
                 opt => opt.MapFrom((src, dest, member, context) =>
                 {
