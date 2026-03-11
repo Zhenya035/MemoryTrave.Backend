@@ -13,9 +13,9 @@ public class LocationController(
 {
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> GetAll([FromBody] GetLocationRequestDto dto)
+    public async Task<IActionResult> GetAll()
     {
-        var result = await service.GetAll(dto);
+        var result = await service.GetAll();
         return HandleResult(result);
     }
 

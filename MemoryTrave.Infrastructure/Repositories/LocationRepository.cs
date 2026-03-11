@@ -7,10 +7,10 @@ namespace MemoryTrave.Infrastructure.Repositories;
 
 public class LocationRepository(MemoryTraveDbContext context) : ILocationRepository
 {
-    public Task<List<Location>> GetAll()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<List<Location>> GetAll() =>
+        await context.Locations
+            .AsNoTracking()
+            .ToListAsync();
 
     public async Task<Location?> Get(Guid locationId, Guid userId) =>
         await context.Locations

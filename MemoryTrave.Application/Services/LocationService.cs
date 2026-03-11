@@ -20,11 +20,15 @@ public class LocationService(
     private const int CityGeoHashSize = 6;
     private const int PointGeoHashSize = 8;
     
-    public Task<Result<List<GetAllLocationDto>>> GetAll(GetLocationRequestDto dto)
+    public async Task<Result<List<GetAllLocationDto>>> GetAll()
     {
-        throw new NotImplementedException();
-    }
+        var locations = await repository.GetAll();
+        
+        var result =  mapper.Map<List<GetAllLocationDto>>(locations);
 
+        return Result<List<GetAllLocationDto>>.Success(result);
+    }
+    
     public async Task<Result<GetLocationDto>> GetById(Guid locationId, Guid userId)
     {
         if (locationId == Guid.Empty)
