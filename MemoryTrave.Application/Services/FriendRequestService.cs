@@ -13,16 +13,28 @@ public class FriendRequestService(
     IFriendshipRepository friendshipRepository,
     IMapper mapper) : IFriendRequestService
 {
-    public async Task<Result<List<GetFriendRequestDto>>> GetAllByUserId(Guid userId)
+    public async Task<Result<List<GetFriendDto>>> GetAllToUserId(Guid userId)
     {
         var userExist = await userRepository.ExistsById(userId);
         if (!userExist)
-            return Result<List<GetFriendRequestDto>>.Failure("User not found", ErrorCode.NotFound);
+            return Result<List<GetFriendDto>>.Failure("User not found", ErrorCode.NotFound);
         
-        var requests = await repository.GetAllByUserId(userId);
-        var result = mapper.Map<List<GetFriendRequestDto>>(requests);
+        var requests = await repository.GetAllToUserId(userId);
+        var result = mapper.Map<List<GetFriendDto>>(requests);
         
-        return Result<List<GetFriendRequestDto>>.Success(result);
+        return Result<List<GetFriendDto>>.Success(result);
+    }
+
+    public async Task<Result<List<GetFriendDto>>> GetAllFromUserId(Guid userId)
+    {
+        var userExist = await userRepository.ExistsById(userId);
+        if (!userExist)
+            return Result<List<GetFriendDto>>.Failure("User not found", ErrorCode.NotFound);
+        
+        var requests = await repository.GetAllFromUserId(userId);
+        var result = mapper.Map<List<GetFriendDto>>(requests);
+        
+        return Result<List<GetFriendDto>>.Success(result);
     }
 
     public async Task<Result> Create(Guid fromId, Guid toId)

@@ -1,5 +1,4 @@
-﻿using MemoryTrave.Domain.Exceptions;
-using MemoryTrave.Domain.Interfaces;
+﻿using MemoryTrave.Domain.Interfaces;
 using MemoryTrave.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,12 +6,18 @@ namespace MemoryTrave.Infrastructure.Repositories;
 
 public class FriendRequestRepository(MemoryTraveDbContext context) : IFriendRequestRepository
 {
-    public async Task<List<FriendRequest>> GetAllByUserId(Guid userId) =>
+    public async Task<List<FriendRequest>> GetAllToUserId(Guid userId) =>
         await context.FriendRequests
             .AsNoTracking()
             .Include(fr => fr.FromUser)
+            .Where(fr => fr.ToUserId == userId)
+            .ToListAsync();
+
+    public async Task<List<FriendRequest>> GetAllFromUserId(Guid userId) =>
+        await context.FriendRequests
+            .AsNoTracking()
             .Include(fr => fr.ToUser)
-            .Where(fr => fr.FromUser.Id == userId || fr.ToUser.Id == userId)
+            .Where(fr => fr.FromUserId == userId)
             .ToListAsync();
 
     public async Task<FriendRequest?> GetById(Guid requestId) =>

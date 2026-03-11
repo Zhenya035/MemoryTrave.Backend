@@ -1,5 +1,8 @@
 ﻿using MemoryTrave.Application.Dto.Requests;
+using MemoryTrave.Application.Dto.Responses.Friend;
 using MemoryTrave.Application.Interfaces;
+using MemoryTrave.Domain.Common;
+using MemoryTrave.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +15,17 @@ public class FriendRequestController(
     IWebHostEnvironment env) : BaseController(env)
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] DirectionEnum direction)
     {
         var userId = GetCurrentUserId();
-        
-        var result = await service.GetAllByUserId(userId);
+
+        var result = direction switch
+        {
+            DirectionEnum.Incoming => await service.GetAllToUserId(userId),
+            DirectionEnum.Outgoing => await service.GetAllFromUserId(userId),
+            _ => new Result<List<GetFriendDto>>(false, null, "Invalid query", ErrorCode.InvalidInput)
+        };
+
         return HandleResult(result);
     }
 
