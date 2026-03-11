@@ -1,12 +1,12 @@
 ﻿using MemoryTrave.Application.Dto.Requests.Article;
-using MemoryTrave.Application.Dto.Responses.Article.GetArticle;
+using MemoryTrave.Application.Dto.Responses.Article;
 using MemoryTrave.Domain.Common;
 
 namespace MemoryTrave.Application.Interfaces;
 
 public interface IArticleService
 {
-    public Task<Result<GetArticleBaseDto>> GetByIdWithIncludes(Guid articleId, Guid userId);
+    public Task<Result<GetArticleDto>> GetByIdWithIncludes(Guid articleId, Guid userId);
     
     public Task<Result> AddPrivate(AddPrivateArticleDto dto, Guid authorId);
     public Task<Result> AddPublic(AddPublicArticleDto dto, Guid authorId);

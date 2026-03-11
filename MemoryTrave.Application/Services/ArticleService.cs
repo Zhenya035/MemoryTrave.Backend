@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MemoryTrave.Application.Dto.Requests.Article;
-using MemoryTrave.Application.Dto.Responses.Article.GetArticle;
+using MemoryTrave.Application.Dto.Responses.Article;
 using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Domain.Common;
 using MemoryTrave.Domain.Enums;
@@ -15,33 +15,33 @@ public class ArticleService(
     IMapper mapper, 
     IValidationService validationService) : IArticleService
 {
-    public async Task<Result<GetArticleBaseDto>> GetByIdWithIncludes(Guid articleId, Guid userId)
+    public async Task<Result<GetArticleDto>> GetByIdWithIncludes(Guid articleId, Guid userId)
     {
         if (articleId == Guid.Empty)
-            return Result<GetArticleBaseDto>.Failure("Invalid article ID", ErrorCode.InvalidInput);
+            return Result<GetArticleDto>.Failure("Invalid article ID", ErrorCode.InvalidInput);
         
         if (userId == Guid.Empty)
-            return Result<GetArticleBaseDto>.Failure("Invalid user ID", ErrorCode.InvalidInput);
+            return Result<GetArticleDto>.Failure("Invalid user ID", ErrorCode.InvalidInput);
         
         var isExist = await repository.IsExists(articleId);
         if (!isExist)
-            return Result<GetArticleBaseDto>.Failure("Article not found", ErrorCode.NotFound);
+            return Result<GetArticleDto>.Failure("Article not found", ErrorCode.NotFound);
 
         var article = await repository.GetByIdWithIncludes(articleId);
         if (article.Visibility == VisibilityEnum.Public)
         {
-            var publicArticleDto = mapper.Map<GetPublicArticleDto>(article);
-            return Result<GetArticleBaseDto>.Success(publicArticleDto);
+            var publicArticleDto = mapper.Map<GetArticleDto>(article);
+            return Result<GetArticleDto>.Success(publicArticleDto);
         }
 
         var access = article.EncryptedKeys.FirstOrDefault(k => k.UserId == userId);
         if (access == null)
-            return Result<GetArticleBaseDto>.Failure("Access denied", ErrorCode.AccessDenied);
+            return Result<GetArticleDto>.Failure("Access denied", ErrorCode.AccessDenied);
         
-        var privateArticleDto = mapper.Map<GetFullPrivateArticleDto>(article);
+        var privateArticleDto = mapper.Map<GetArticleDto>(article);
         privateArticleDto.EncryptedKey = access.EncryptedKey;
         
-        return Result<GetArticleBaseDto>.Success(privateArticleDto);
+        return Result<GetArticleDto>.Success(privateArticleDto);
     }
 
     public async Task<Result> AddPrivate(AddPrivateArticleDto dto, Guid authorId)

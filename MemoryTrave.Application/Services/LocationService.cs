@@ -41,6 +41,21 @@ public class LocationService(
         var location = await repository.Get(locationId, userId); 
         
         var response = mapper.Map<GetLocationDto>(location);
+        
+        foreach (var article in response.Articles)
+        {
+            if (article.Visibility == VisibilityEnum.Private)
+            {
+               var key = location.Articles
+                    .FirstOrDefault(a => a.Id == article.Id)?
+                    .EncryptedKeys?
+                    .FirstOrDefault()?
+                    .EncryptedKey;
+            
+                article.EncryptedKey = key;
+            }
+        }
+        
         return Result<GetLocationDto>.Success(response);
     }
 

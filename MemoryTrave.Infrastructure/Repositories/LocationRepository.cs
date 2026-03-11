@@ -16,7 +16,11 @@ public class LocationRepository(MemoryTraveDbContext context) : ILocationReposit
         await context.Locations
             .AsNoTracking()
             .Include(l => l.Articles)
-            .ThenInclude(a => a.EncryptedKeys)
+                .ThenInclude(a => a.EncryptedKeys)
+            .Include(l => l.Articles)
+                .ThenInclude(a => a.Author)
+            .Include(l => l.Articles)
+                .ThenInclude(a => a.Location)
             .Select(l => new Location
             {
                 Id = l.Id,

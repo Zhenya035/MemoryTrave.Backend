@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MemoryTrave.Application.Dto.Requests.Article;
 using MemoryTrave.Application.Dto.Responses.Article;
-using MemoryTrave.Application.Dto.Responses.Article.GetArticle;
 using MemoryTrave.Domain.Enums;
 using MemoryTrave.Domain.Models;
 
@@ -27,24 +26,16 @@ public class ArticleMappingProfile : Profile
             .ForMember(dto => dto.EncryptedDek,
                 opt => opt.Ignore());
 
-        CreateMap<Article, GetArticleBaseDto>()
+        CreateMap<Article, GetArticleDto>()
             .ForMember(dto => dto.AuthorName,
                 opt => opt.MapFrom(src =>
                     src.Author.Username))
             .ForMember(dto => dto.LocationName,
                 opt => opt.MapFrom(src =>
-                    src.Location.Name));
-        
-        CreateMap<Article, GetFullPrivateArticleDto>()
-            .IncludeBase<Article, GetArticleBaseDto>()
-            .ForMember(dto => dto.EncryptedKey,
+                    src.Location.Name))
+            .ForMember(dto => dto.EncryptedKey, 
                 opt => opt.Ignore());
-
-        CreateMap<Article, GetPreviewPrivateArticle>()
-            .IncludeBase<Article, GetArticleBaseDto>();
         
-        CreateMap<Article, GetPublicArticleDto>()
-            .IncludeBase<Article, GetArticleBaseDto>();
         
         CreateMap<AddPrivateArticleDto, Article>()
             .ForMember(mod => mod.Id, opt => 
