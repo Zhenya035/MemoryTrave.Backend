@@ -11,6 +11,7 @@ public static class InfrastructureLayerExtensions
         services.AddScoped<IArticleRepository, ArticleRepository>();
         services.AddScoped<IFriendRequestRepository, FriendRequestRepository>();
         services.AddScoped<IFriendshipRepository, FriendshipRepository>();
+        services.AddScoped<ILocationRepository, LocationRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
     }
 }
