@@ -23,7 +23,15 @@ public class LocationController(
     [AllowAnonymous]
     public async Task<IActionResult> Get(Guid locationId)
     {
-        var userId = GetCurrentUserId();
+        Guid userId;
+        try
+        {
+            userId = GetCurrentUserId();
+        }
+        catch (UnauthorizedAccessException)
+        {
+            userId = Guid.Empty;
+        }
         
         var result = await service.GetById(locationId, userId);
         return HandleResult(result);

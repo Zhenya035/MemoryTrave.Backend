@@ -38,11 +38,17 @@ public class LocationService(
         if (!isExist)
             return Result<GetLocationDto>.Failure("Location not found", ErrorCode.NotFound);
         
-        isExist = await userRepository.ExistsById(userId);
-        if (!isExist)
-            return Result<GetLocationDto>.Failure("User not found", ErrorCode.NotFound);
-        
-        var location = await repository.Get(locationId, userId); 
+        Location? location;
+        if(userId != Guid.Empty)
+        {
+            isExist = await userRepository.ExistsById(userId);
+            if (!isExist)
+                return Result<GetLocationDto>.Failure("User not found", ErrorCode.NotFound);
+            
+            location = await repository.GetForUser(locationId, userId);
+        }
+        else
+            location = await repository.GetPublic(locationId);
         
         var response = mapper.Map<GetLocationDto>(location);
         

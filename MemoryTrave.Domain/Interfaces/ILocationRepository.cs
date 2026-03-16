@@ -5,7 +5,8 @@ namespace MemoryTrave.Domain.Interfaces;
 public interface ILocationRepository
 {
     public Task<List<Location>> GetAll();
-    public Task<Location?> Get(Guid locationId, Guid userId);
+    public Task<Location?> GetForUser(Guid locationId, Guid userId);
+    public Task<Location?> GetPublic(Guid locationId);
     
     public Task Add(Location location);
     

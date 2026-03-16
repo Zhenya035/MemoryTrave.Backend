@@ -12,7 +12,7 @@ public class LocationRepository(MemoryTraveDbContext context) : ILocationReposit
             .AsNoTracking()
             .ToListAsync();
 
-    public async Task<Location?> Get(Guid locationId, Guid userId) =>
+    public async Task<Location?> GetForUser(Guid locationId, Guid userId) =>
         await context.Locations
             .AsNoTracking()
             .Include(l => l.Articles)
@@ -33,6 +33,27 @@ public class LocationRepository(MemoryTraveDbContext context) : ILocationReposit
                     .Where(a => a.Visibility == VisibilityEnum.Public ||
                                 (a.Visibility == VisibilityEnum.Private &&
                                  a.EncryptedKeys.Any(k => k.UserId == userId)))
+                    .ToList()
+            })
+            .FirstOrDefaultAsync(l => l.Id == locationId);
+
+    public async Task<Location?> GetPublic(Guid locationId) =>
+        await context.Locations
+            .AsNoTracking()
+            .Include(l => l.Articles)
+            .ThenInclude(a => a.Author)
+            .Include(l => l.Articles)
+            .ThenInclude(a => a.Location)
+            .Select(l => new Location
+            {
+                Id = l.Id,
+                Name = l.Name,
+                Type = l.Type,
+                Latitude = l.Latitude,
+                Longitude = l.Longitude,
+                Geohash = l.Geohash,
+                Articles = l.Articles
+                    .Where(a => a.Visibility == VisibilityEnum.Public)
                     .ToList()
             })
             .FirstOrDefaultAsync(l => l.Id == locationId);
