@@ -1,4 +1,4 @@
-﻿using MemoryTrave.Application.Dto.Requests;
+﻿using MemoryTrave.Application.Dto;
 using MemoryTrave.Application.Dto.Responses.Friend;
 using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Domain.Common;

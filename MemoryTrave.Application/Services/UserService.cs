@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MemoryTrave.Application.Dto.Requests;
+using MemoryTrave.Application.Dto;
 using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces;

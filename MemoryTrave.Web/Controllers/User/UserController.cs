@@ -1,4 +1,4 @@
-﻿using MemoryTrave.Application.Dto.Requests;
+﻿using MemoryTrave.Application.Dto;
 using MemoryTrave.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿namespace MemoryTrave.Application.Dto.Requests;
+﻿namespace MemoryTrave.Application.Dto;
 
 public class IdDto
 {

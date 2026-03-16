@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MemoryTrave.Application.Dto.Requests;
+using MemoryTrave.Application.Dto;
 
 namespace MemoryTrave.Application.Validators.Requests;
 
