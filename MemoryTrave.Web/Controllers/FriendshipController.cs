@@ -17,6 +17,15 @@ public class FriendshipController(IWebHostEnvironment env, IFriendshipService se
         return HandleResult(result);
     }
 
+    [HttpGet("keys")]
+    public async Task<IActionResult> GetFriendsKeys()
+    {
+        var userId = GetCurrentUserId();
+        
+        var result = await service.GetPublicKeys(userId);
+        return HandleResult(result);
+    }
+
     [HttpDelete("{friendshipId:guid}")]
     public async Task<IActionResult> Delete(Guid friendshipId)
     {

@@ -25,6 +25,22 @@ public class FriendshipService(
         return Result<List<GetFriendDto>>.Success(result);
     }
 
+    public async Task<Result<List<GetPublicKeysDto>>> GetPublicKeys(Guid userId)
+    {
+        var isExist = await userRepository.ExistsById(userId);
+        if (!isExist)
+            return Result<List<GetPublicKeysDto>>.Failure("User not found", ErrorCode.NotFound);
+            
+        var friendship = await repository.GetAllFriends(userId);
+        
+        var result = friendship.Select(friend =>
+            friend.UserId == userId
+                ? new GetPublicKeysDto { FriendId = friend.FriendId, PublicKey = friend.Friend.PublicKey }
+                : new GetPublicKeysDto { FriendId = friend.UserId, PublicKey = friend.User.PublicKey }).ToList();
+
+        return Result<List<GetPublicKeysDto>>.Success(result);
+    }
+
     public async Task<Result> Delete(Guid userId, Guid friendshipId)
     {
         var friendship = await repository.GetById(friendshipId);
