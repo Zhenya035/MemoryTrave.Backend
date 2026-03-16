@@ -14,7 +14,7 @@ builder.Services.AddDbContext<MemoryTraveDbContext>(options =>
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddInfrastructureLayer();
+builder.Services.AddInfrastructureLayer(configuration);
 builder.Services.AddApplicationLayer();
 
 builder.Services.AddJwt(configuration);
