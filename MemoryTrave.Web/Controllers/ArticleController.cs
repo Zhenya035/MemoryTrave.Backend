@@ -1,4 +1,5 @@
-﻿using MemoryTrave.Application.Dto.Requests.Article;
+﻿using MemoryTrave.Application.Dto.Photo;
+using MemoryTrave.Application.Dto.Requests.Article;
 using MemoryTrave.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +19,12 @@ public class ArticleController(IArticleService service, IWebHostEnvironment env)
         return HandleResult(result);
     }
 
-    [HttpPost("private")]
-    public async Task<IActionResult> AddPrivate([FromBody] AddPrivateArticleDto dto)
+    [HttpPost("private/{locationId:guid}/create")]
+    public async Task<IActionResult> AddPrivate(Guid locationId)
     {
         var userId = GetCurrentUserId();
         
-        var result = await service.AddPrivate(dto, userId);
+        var result = await service.AddPrivate(locationId, userId);
         return HandleResult(result);
     }
 
@@ -33,6 +34,20 @@ public class ArticleController(IArticleService service, IWebHostEnvironment env)
         var userId = GetCurrentUserId();
         
         var result = await service.AddPublic(dto, userId);
+        return HandleResult(result);
+    }
+    
+    [HttpPost("private/{articleId:guid}/photo")]
+    public async Task<IActionResult> AddPhotoToPrivate(Guid articleId, [FromBody] AddPrivateArticleDto dto)
+    {
+        var result = await service.AddDataToPrivate(dto, articleId);
+        return HandleResult(result);
+    }
+
+    [HttpPost("public/{articleId:guid}/photo")]
+    public async Task<IActionResult> AddPublic(Guid articleId, [FromBody] PhotosDto dto)
+    {
+        var result = await service.AddPhotoToPublic(dto, articleId);
         return HandleResult(result);
     }
     

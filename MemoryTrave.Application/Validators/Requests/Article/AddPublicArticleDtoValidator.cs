@@ -10,9 +10,6 @@ public class AddPublicArticleDtoValidator : AbstractValidator<AddPublicArticleDt
         RuleFor(a => a.Description)
             .NotEmpty().WithMessage("Description is required");
         
-        RuleFor(a => a.PhotosUrls)
-            .NotEmpty().WithMessage("PhotosUrls is required");
-        
         RuleFor(a => a.LocationId)
             .NotEmpty().WithMessage("LocationId is required");
     }

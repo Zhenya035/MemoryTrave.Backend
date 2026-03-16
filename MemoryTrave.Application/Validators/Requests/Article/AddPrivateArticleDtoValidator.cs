@@ -20,8 +20,5 @@ public class AddPrivateArticleDtoValidator : AbstractValidator<AddPrivateArticle
         
         RuleForEach(a => a.EncryptedKeys)
             .SetValidator(new AddAccessDtoValidator());
-        
-        RuleFor(a => a.LocationId)
-            .NotEmpty().WithMessage("LocationId is required");
     }
 }

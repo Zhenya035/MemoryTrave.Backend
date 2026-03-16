@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MemoryTrave.Application.Dto.Photo;
 using MemoryTrave.Application.Dto.Requests.Article;
 using MemoryTrave.Application.Dto.Responses.Article;
 using MemoryTrave.Application.Interfaces;
@@ -10,7 +11,8 @@ using MemoryTrave.Domain.Models;
 namespace MemoryTrave.Application.Services;
 
 public class ArticleService(
-    IArticleRepository repository, 
+    IArticleRepository repository,
+    ILocationRepository locationRepository,
     IArticleAccessRepository accessRepository,
     IMapper mapper, 
     IValidationService validationService) : IArticleService
@@ -44,23 +46,62 @@ public class ArticleService(
         return Result<GetArticleDto>.Success(privateArticleDto);
     }
 
-    public async Task<Result> AddPrivate(AddPrivateArticleDto dto, Guid authorId)
+    public async Task<Result<Guid>> AddPrivate(Guid locationId, Guid authorId)
+    {
+        var isExists = await locationRepository.Exists(locationId);
+        if(!isExists)
+            return Result<Guid>.Failure("Location not found", ErrorCode.NotFound);
+
+        var article = new Article
+        {
+            Id = Guid.NewGuid(),
+            Visibility = VisibilityEnum.Private,
+            CreatedAt = DateTime.UtcNow,
+            LastChange = DateTime.UtcNow,
+            AuthorId = authorId,
+            LocationId = locationId
+        };
+
+        var articleId = await repository.Add(article);
+        
+        return Result<Guid>.Success(articleId);
+    }
+
+    public async Task<Result<Guid>> AddPublic(AddPublicArticleDto dto, Guid authorId)
     {
         var validResult = await validationService.Validate(dto);
         if (!validResult.IsSuccess)
-            return Result.Failure(validResult.Error, validResult.ErrorCode);
-        
-        if(dto.EncryptedKeys.All(k => k.UserId != authorId))
-            return Result.Failure("Invalid keys", ErrorCode.InvalidInput);
+            return Result<Guid>.Failure(validResult.Error, validResult.ErrorCode);
         
         var article = mapper.Map<Article>(dto);
         article.Id = Guid.NewGuid();
-        article.Visibility = VisibilityEnum.Private;
+        article.Visibility = VisibilityEnum.Public;
         article.CreatedAt = DateTime.UtcNow;
         article.LastChange = DateTime.UtcNow;
         article.AuthorId = authorId;
         
         var articleId = await repository.Add(article);
+        return Result<Guid>.Success(articleId);
+    }
+
+    public async Task<Result> AddDataToPrivate(AddPrivateArticleDto dto, Guid articleId)
+    {
+        var isValid = await validationService.Validate(dto);
+        if (!isValid.IsSuccess && isValid.Error != null)
+            return Result.Failure(isValid.Error, ErrorCode.InvalidInput);
+        
+        var article = await repository.GetByIdWithIncludes(articleId);
+        if (article == null)
+            return Result.Failure("Article not found", ErrorCode.NotFound);
+        if (article.Visibility == VisibilityEnum.Public)
+            return Result.Failure("Incorrect visibility", ErrorCode.InvalidInput);
+        if (article.EncryptedPreviewData != null || article.EncryptedData != null || article.EncryptedKeys != null)
+            return Result.Failure("Already added", ErrorCode.AlreadyExists);
+
+        article.EncryptedPreviewData = dto.EncryptedPreviewData;
+        article.EncryptedData = dto.EncryptedData;
+
+        await repository.Update(article, articleId);
         
         var encryptedKeys = dto.EncryptedKeys.Select(mapper.Map<ArticleAccess>).ToList();
         foreach (var articleAccess in encryptedKeys)
@@ -73,20 +114,20 @@ public class ArticleService(
         return Result.Success();
     }
 
-    public async Task<Result> AddPublic(AddPublicArticleDto dto, Guid authorId)
+    public async Task<Result> AddPhotoToPublic(PhotosDto dto, Guid articleId)
     {
-        var validResult = await validationService.Validate(dto);
-        if (!validResult.IsSuccess)
-            return Result.Failure(validResult.Error, validResult.ErrorCode);
+        var article = await repository.GetByIdWithIncludes(articleId);
+        if (article == null)
+            return Result.Failure("Article not found", ErrorCode.NotFound);
+        if (article.Visibility == VisibilityEnum.Private)
+            return Result.Failure("Incorrect visibility", ErrorCode.InvalidInput);
+        if (article.PhotosUrls != null)
+            return Result.Failure("Already added", ErrorCode.AlreadyExists);
+
+        article.PhotosUrls = dto.Photos;
         
-        var article = mapper.Map<Article>(dto);
-        article.Id = Guid.NewGuid();
-        article.Visibility = VisibilityEnum.Public;
-        article.CreatedAt = DateTime.UtcNow;
-        article.LastChange = DateTime.UtcNow;
-        article.AuthorId = authorId;
+        await repository.Update(article, articleId);
         
-        await repository.Add(article);
         return Result.Success();
     }
 

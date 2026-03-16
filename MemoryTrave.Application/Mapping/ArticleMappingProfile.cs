@@ -36,25 +36,6 @@ public class ArticleMappingProfile : Profile
             .ForMember(dto => dto.EncryptedKey, 
                 opt => opt.Ignore());
         
-        
-        CreateMap<AddPrivateArticleDto, Article>()
-            .ForMember(mod => mod.Id, opt => 
-                opt.Ignore())
-            .ForMember(mod => mod.Visibility, opt => 
-                opt.Ignore())
-            .ForMember(mod => mod.CreatedAt, opt => 
-                opt.Ignore())
-            .ForMember(mod => mod.LastChange, opt => 
-                opt.Ignore())
-            .ForMember(mod => mod.EncryptedKeys, opt =>
-                opt.Ignore())
-            .ForMember(mod => mod.Description, opt => 
-                opt.Ignore())
-            .ForMember(mod => mod.PhotosUrls, opt => 
-                opt.Ignore())
-            .ForMember(mod => mod.AuthorId, opt =>
-                opt.Ignore());
-        
         CreateMap<AddPublicArticleDto, Article>()
             .ForMember(mod => mod.Id, opt => 
                 opt.Ignore())
@@ -63,6 +44,8 @@ public class ArticleMappingProfile : Profile
             .ForMember(mod => mod.CreatedAt, opt => 
                 opt.Ignore())
             .ForMember(mod => mod.LastChange, opt => 
+                opt.Ignore())
+            .ForMember(mod => mod.PhotosUrls, opt => 
                 opt.Ignore())
             .ForMember(mod => mod.EncryptedPreviewData, opt => 
                 opt.Ignore())
