@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MemoryTrave.Application.Dto;
 using MemoryTrave.Application.Dto.Photo;
 using MemoryTrave.Application.Dto.Requests.Article;
 using MemoryTrave.Application.Dto.Responses.Article;
@@ -46,11 +47,11 @@ public class ArticleService(
         return Result<GetArticleDto>.Success(privateArticleDto);
     }
 
-    public async Task<Result<Guid>> AddPrivate(Guid locationId, Guid authorId)
+    public async Task<Result<IdDto>> AddPrivate(Guid locationId, Guid authorId)
     {
         var isExists = await locationRepository.Exists(locationId);
         if(!isExists)
-            return Result<Guid>.Failure("Location not found", ErrorCode.NotFound);
+            return Result<IdDto>.Failure("Location not found", ErrorCode.NotFound);
 
         var article = new Article
         {
@@ -63,15 +64,16 @@ public class ArticleService(
         };
 
         var articleId = await repository.Add(article);
+        var result = new IdDto { Id = articleId };
         
-        return Result<Guid>.Success(articleId);
+        return Result<IdDto>.Success(result);
     }
 
-    public async Task<Result<Guid>> AddPublic(AddPublicArticleDto dto, Guid authorId)
+    public async Task<Result<IdDto>> AddPublic(AddPublicArticleDto dto, Guid authorId)
     {
         var validResult = await validationService.Validate(dto);
         if (!validResult.IsSuccess)
-            return Result<Guid>.Failure(validResult.Error, validResult.ErrorCode);
+            return Result<IdDto>.Failure(validResult.Error, validResult.ErrorCode);
         
         var article = mapper.Map<Article>(dto);
         article.Id = Guid.NewGuid();
@@ -81,7 +83,9 @@ public class ArticleService(
         article.AuthorId = authorId;
         
         var articleId = await repository.Add(article);
-        return Result<Guid>.Success(articleId);
+        var result = new IdDto { Id = articleId };
+        
+        return Result<IdDto>.Success(result);
     }
 
     public async Task<Result> AddDataToPrivate(AddPrivateArticleDto dto, Guid articleId)
