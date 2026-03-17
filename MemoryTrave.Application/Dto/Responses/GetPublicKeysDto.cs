@@ -1,4 +1,4 @@
-﻿namespace MemoryTrave.Application.Dto.Responses.Friend;
+﻿namespace MemoryTrave.Application.Dto.Responses;
 
 public class GetPublicKeysDto
 {

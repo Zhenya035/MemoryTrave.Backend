@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MemoryTrave.Application.Dto.Responses;
 using MemoryTrave.Application.Dto.Responses.Friend;
 using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Domain.Common;

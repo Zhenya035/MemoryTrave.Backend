@@ -1,4 +1,5 @@
-﻿using MemoryTrave.Application.Dto.Responses.Friend;
+﻿using MemoryTrave.Application.Dto.Responses;
+using MemoryTrave.Application.Dto.Responses.Friend;
 using MemoryTrave.Domain.Common;
 
 namespace MemoryTrave.Application.Interfaces;
