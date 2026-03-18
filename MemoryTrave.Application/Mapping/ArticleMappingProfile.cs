@@ -20,7 +20,7 @@ public class ArticleMappingProfile : Profile
             .ForMember(dto => dto.Description,
                 opt => opt.MapFrom(src =>
                     src.Visibility == VisibilityEnum.Public ? src.Description : null))
-            .ForMember(dto => dto.EncryptedDek,
+            .ForMember(dto => dto.EncryptedKey,
                 opt => opt.Ignore());
 
         CreateMap<Article, GetArticleDto>()

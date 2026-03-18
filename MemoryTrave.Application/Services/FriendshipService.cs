@@ -36,8 +36,8 @@ public class FriendshipService(
         
         var result = friendship.Select(friend =>
             friend.UserId == userId
-                ? new GetPublicKeysDto { FriendId = friend.FriendId, PublicKey = friend.Friend.PublicKey }
-                : new GetPublicKeysDto { FriendId = friend.UserId, PublicKey = friend.User.PublicKey }).ToList();
+                ? new GetPublicKeysDto { UserId = friend.FriendId, PublicKey = friend.Friend.PublicKey }
+                : new GetPublicKeysDto { UserId = friend.UserId, PublicKey = friend.User.PublicKey }).ToList();
 
         return Result<List<GetPublicKeysDto>>.Success(result);
     }

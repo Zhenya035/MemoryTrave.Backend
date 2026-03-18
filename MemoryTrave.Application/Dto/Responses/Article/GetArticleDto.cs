@@ -11,8 +11,7 @@ public class GetArticleDto
     public string AuthorName { get; set; } = string.Empty;
     public string LocationName { get; set; } = string.Empty;
     
-    public string? EncryptedPreviewData { get; set; }
-    public string? EncryptedData { get; set; }
+    public string? EncryptedDescription { get; set; }
     public string? EncryptedKey { get; set; }
     
     public string? Description { get; set; }

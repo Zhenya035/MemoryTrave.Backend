@@ -99,7 +99,8 @@ public class ArticleService(
             return Result.Failure("Article not found", ErrorCode.NotFound);
         if (article.Visibility == VisibilityEnum.Public)
             return Result.Failure("Incorrect visibility", ErrorCode.InvalidInput);
-
+        
+        article.EncryptedDescription = dto.EncryptedDescription;
         await repository.Update(article, articleId);
         
         var encryptedKeys = dto.EncryptedKeys.Select(mapper.Map<ArticleAccess>).ToList();

@@ -7,8 +7,7 @@ public class UpdateArticleDto
 {
     public VisibilityEnum  Visibility { get; set; }
     
-    public string? EncryptedPreviewData { get; set; }
-    public string? EncryptedData { get; set; }
+    public string? EncryptedDescription { get; set; }
     public List<AddAccessDto>? EncryptedKeys { get; set; }
     
     public string? Description { get; set; }

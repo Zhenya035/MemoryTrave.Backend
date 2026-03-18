@@ -13,15 +13,10 @@ public class UpdateArticleDtoValidator : AbstractValidator<UpdateArticleDto>
             .IsInEnum()
             .WithMessage("Visibility is invalid");
         
-        RuleFor(a => a.EncryptedPreviewData)
+        RuleFor(a => a.EncryptedDescription)
             .NotEmpty()
             .When(a => a.Visibility == VisibilityEnum.Private)
-            .WithMessage("Preview encrypted data is required for private article");
-        
-        RuleFor(a => a.EncryptedData)
-            .NotEmpty()
-            .When(a => a.Visibility == VisibilityEnum.Private)
-            .WithMessage("Encrypted data is required for private article");
+            .WithMessage("Encrypted description is required for private article");
         
         RuleFor(a => a.EncryptedKeys)
             .NotEmpty()
