@@ -18,6 +18,7 @@ public class JwtService(IOptions<JwtSettings> settings) : IJwtService
         {
             new("id", user.Id.ToString()),
             new("email", user.Email),
+            new("username", user.Username),
             new("role", user.Role.ToString()),
         };
         
