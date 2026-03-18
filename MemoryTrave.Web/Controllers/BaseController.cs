@@ -46,6 +46,15 @@ public abstract class BaseController(IWebHostEnvironment env) : ControllerBase
       return userId;
    }
    
+   protected string GetCurrentUsername()
+   {
+      var claim = User.FindFirst("username") ?? User.FindFirst(ClaimTypes.NameIdentifier);
+      if (claim == null || claim.Value == null)
+         throw new UnauthorizedAccessException(); 
+      
+      return claim.Value;
+   }
+   
    private string GetTitleForStatus(int errorCode) => errorCode switch
    {
       400 => "Bad Request",

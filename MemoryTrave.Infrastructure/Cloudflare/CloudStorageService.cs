@@ -10,12 +10,12 @@ public class CloudStorageService(
     IR2Service clientFactory,
     IOptions<R2Settings> settings) : ICloudStorageService
 {
-    public async Task<Result<List<string>>> GetPhotoKeysAsync(Guid userId, Guid articleId)
+    public async Task<Result<List<string>>> GetPhotoKeysAsync(string username, Guid articleId)
     {
         try
         {
             var client = clientFactory.CreateClient();
-            var prefix = $"{userId}/{articleId}/";
+            var prefix = $"{username}/{articleId}/";
 
             var listResponse = await client.ListObjectsV2Async(new ListObjectsV2Request
             {
@@ -36,11 +36,11 @@ public class CloudStorageService(
         }
     }
 
-    public async Task<string> UploadPhotoAsync(string photo, Guid authorId, Guid articleId, int photoNumber)
+    public async Task<string> UploadPhotoAsync(string photo, string authorName, Guid articleId, int photoNumber)
     {
         var client = clientFactory.CreateClient();
         
-        var photoKey = $"{authorId.ToString()}/{articleId.ToString()}/{photoNumber}";
+        var photoKey = $"{authorName}/{articleId.ToString()}/{photoNumber}";
         var photoBytes = Convert.FromBase64String(photo);
         
         using var stream = new MemoryStream(photoBytes);
@@ -110,10 +110,10 @@ public class CloudStorageService(
         }
     }
 
-    public async Task<Result<List<string>>> DownloadPhotoAsync(Guid userId, Guid articleId)
+    public async Task<Result<List<string>>> DownloadPhotoAsync(string author, Guid articleId)
     {
         var client = clientFactory.CreateClient();
-        var prefix = $"{userId}/{articleId}/";
+        var prefix = $"{author}/{articleId}/";
 
         var listResponse = await client.ListObjectsV2Async(new ListObjectsV2Request
         {

@@ -10,12 +10,11 @@ namespace MemoryTrave.Web.Controllers;
 [Authorize]
 public class PhotoController(IWebHostEnvironment env, ICloudStorageService photoService) : BaseController(env)
 {
-    [HttpGet("{articleId:guid}/download")]
-    public async Task<IActionResult> Download(Guid articleId)
+    [HttpPost("download")]
+    [AllowAnonymous]
+    public async Task<IActionResult> DownloadByArticle([FromBody] DownloadForArticleDto dto)
     {
-        var userId = GetCurrentUserId();
-        
-        var photos = await photoService.DownloadPhotoAsync(userId, articleId);
+        var photos = await photoService.DownloadPhotoAsync(dto.Author, dto.ArticleId);
         Result<PhotosDto> result;
         
         if(photos.IsSuccess && photos.Data != null)
@@ -32,8 +31,9 @@ public class PhotoController(IWebHostEnvironment env, ICloudStorageService photo
         return HandleResult(result);
     }
     
-    [HttpGet("file")]
-    public async Task<IActionResult> DownloadByKey([FromQuery] string key)
+    [HttpPost("file")]
+    [AllowAnonymous]
+    public async Task<IActionResult> DownloadByKey([FromBody] string key)
     {
         if (string.IsNullOrEmpty(key))
             return HandleResult(Result<string>.Failure("Key required", ErrorCode.InvalidInput));
@@ -49,12 +49,12 @@ public class PhotoController(IWebHostEnvironment env, ICloudStorageService photo
     [HttpPost("{articleId:guid}/upload")]
     public async Task<IActionResult> Upload(Guid articleId, [FromBody] PhotosDto photosDto)
     {
-        var userId = GetCurrentUserId();
+        var userName = GetCurrentUsername();
         var photosUrls = new List<string>();
         
         for (var i = 0; i < photosDto.Photos.Count; i++)
         {
-            var photoUrl = await photoService.UploadPhotoAsync(photosDto.Photos[i], userId, articleId, i+1);
+            var photoUrl = await photoService.UploadPhotoAsync(photosDto.Photos[i], userName, articleId, i+1);
             photosUrls.Add(photoUrl);
         }
 
@@ -70,9 +70,9 @@ public class PhotoController(IWebHostEnvironment env, ICloudStorageService photo
     [HttpDelete("{articleId:guid}/all")]
     public async Task<IActionResult> DeleteAll(Guid articleId)
     {
-        var userId = GetCurrentUserId();
+        var username = GetCurrentUsername();
         
-        var photosUrls = await photoService.GetPhotoKeysAsync(userId, articleId);
+        var photosUrls = await photoService.GetPhotoKeysAsync(username, articleId);
         Result result;
         
         if (photosUrls.IsSuccess && photosUrls.Data != null)
