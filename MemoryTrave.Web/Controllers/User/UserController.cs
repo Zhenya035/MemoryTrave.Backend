@@ -17,6 +17,15 @@ public class UserController(IUserService service, IWebHostEnvironment env) : Bas
         var result = await service.GetUsersWithoutMe(userId);
         return HandleResult(result);
     }
+    
+    [HttpGet("keys/public")]
+    public async Task<IActionResult> GetPublicKey()
+    {
+        var userId = GetCurrentUserId();
+        
+        var result = await service.GetPublicKey(userId);
+        return HandleResult(result);
+    }
 
     [HttpPut("block")]
     public async Task<IActionResult> Block(ListIdDto userIds)

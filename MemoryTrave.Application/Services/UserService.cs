@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MemoryTrave.Application.Dto;
 using MemoryTrave.Application.Dto.Requests.User;
+using MemoryTrave.Application.Dto.Responses;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Domain.Common;
@@ -128,9 +129,9 @@ public class UserService(
         foreach (var article in resultDto.Articles)
         {
             if (article.IsPrivate && access.TryGetValue(article.Id, out var key))
-                article.EncryptedDek = key;
+                article.EncryptedKey = key;
             else
-                article.EncryptedDek = null;
+                article.EncryptedKey = null;
         }
         
         var friends = await friendRepository.GetAllFriends(user.Id);
@@ -155,6 +156,21 @@ public class UserService(
         return response;
     }
 
+    public async Task<Result<GetPublicKeysDto>> GetPublicKey(Guid userId)
+    {
+        var user = await userRepository.GetById(userId);
+        if (user == null)
+            return Result<GetPublicKeysDto>.Failure("User not found", ErrorCode.NotFound);
+
+        var result = new GetPublicKeysDto
+        {
+            UserId = userId,
+            PublicKey = user.PublicKey,
+        };
+        
+        return Result<GetPublicKeysDto>.Success(result);
+    }
+
     public async Task<Result<List<GetUserDto>>> GetUsersWithoutMe(Guid userId)
     {
         var user = await userRepository.GetById(userId);
@@ -167,9 +183,7 @@ public class UserService(
         
         var resulDto = mapper.Map<List<GetUserDto>>(result);
         
-        var response = Result<List<GetUserDto>>.Success(resulDto);
-        
-        return response;
+        return Result<List<GetUserDto>>.Success(resulDto);
     }
 
     public async Task<Result> Block(ListIdDto blockIds, Guid userId)
