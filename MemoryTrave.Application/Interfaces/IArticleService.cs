@@ -14,7 +14,6 @@ public interface IArticleService
     public Task<Result<IdDto>> AddPublic(AddPublicArticleDto dto, Guid authorId);
     
     public Task<Result> AddDataToPrivate(AddPrivateArticleDto dto, Guid articleId);
-    public Task<Result> AddPhotoToPublic(PhotosDto dto, Guid articleId);
     
     public Task<Result> Update(UpdateArticleDto dto, Guid articleId);
    

@@ -17,9 +17,6 @@ public class ArticleMappingProfile : Profile
             .ForMember(dto => dto.IsPrivate,
                 opt => opt.MapFrom(src =>
                     src.Visibility == VisibilityEnum.Private))
-            .ForMember(dto => dto.EncryptedPreviewData,
-                opt => opt.MapFrom(src =>
-                    src.Visibility == VisibilityEnum.Private ? src.EncryptedPreviewData : null))
             .ForMember(dto => dto.Description,
                 opt => opt.MapFrom(src =>
                     src.Visibility == VisibilityEnum.Public ? src.Description : null))
@@ -44,12 +41,6 @@ public class ArticleMappingProfile : Profile
             .ForMember(mod => mod.CreatedAt, opt => 
                 opt.Ignore())
             .ForMember(mod => mod.LastChange, opt => 
-                opt.Ignore())
-            .ForMember(mod => mod.PhotosUrls, opt => 
-                opt.Ignore())
-            .ForMember(mod => mod.EncryptedPreviewData, opt => 
-                opt.Ignore())
-            .ForMember(mod => mod.EncryptedData, opt => 
                 opt.Ignore())
             .ForMember(mod => mod.EncryptedKeys, opt => 
                 opt.Ignore())

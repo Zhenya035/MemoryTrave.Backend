@@ -27,10 +27,7 @@ public class ArticleRepository(MemoryTraveDbContext context) : IArticleRepositor
             .Where(a => a.Id == articleId)
             .ExecuteUpdateAsync(p => p
                 .SetProperty(a => a.Visibility, article.Visibility)
-                .SetProperty(a => a.EncryptedPreviewData, article.EncryptedPreviewData)
-                .SetProperty(a => a.EncryptedData, article.EncryptedData)
                 .SetProperty(a => a.Description, article.Description)
-                .SetProperty(a => a.PhotosUrls, article.PhotosUrls)
                 .SetProperty(a => a.LastChange, article.LastChange));
 
     public async Task Delete(Guid articleId) =>

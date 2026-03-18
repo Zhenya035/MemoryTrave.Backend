@@ -23,9 +23,6 @@ public class ArticleService(
         if (articleId == Guid.Empty)
             return Result<GetArticleDto>.Failure("Invalid article ID", ErrorCode.InvalidInput);
         
-        if (userId == Guid.Empty)
-            return Result<GetArticleDto>.Failure("Invalid user ID", ErrorCode.InvalidInput);
-        
         var isExist = await repository.IsExists(articleId);
         if (!isExist)
             return Result<GetArticleDto>.Failure("Article not found", ErrorCode.NotFound);
@@ -36,6 +33,9 @@ public class ArticleService(
             var publicArticleDto = mapper.Map<GetArticleDto>(article);
             return Result<GetArticleDto>.Success(publicArticleDto);
         }
+
+        if (userId == Guid.Empty)
+            return Result<GetArticleDto>.Failure("Unauthorized", ErrorCode.Unauthorized);
 
         var access = article.EncryptedKeys.FirstOrDefault(k => k.UserId == userId);
         if (access == null)
@@ -99,11 +99,6 @@ public class ArticleService(
             return Result.Failure("Article not found", ErrorCode.NotFound);
         if (article.Visibility == VisibilityEnum.Public)
             return Result.Failure("Incorrect visibility", ErrorCode.InvalidInput);
-        if (article.EncryptedPreviewData != null || article.EncryptedData != null || article.EncryptedKeys != null)
-            return Result.Failure("Already added", ErrorCode.AlreadyExists);
-
-        article.EncryptedPreviewData = dto.EncryptedPreviewData;
-        article.EncryptedData = dto.EncryptedData;
 
         await repository.Update(article, articleId);
         
@@ -114,23 +109,6 @@ public class ArticleService(
             articleAccess.ArticleId = articleId;
         }
         await accessRepository.AddList(encryptedKeys);
-        
-        return Result.Success();
-    }
-
-    public async Task<Result> AddPhotoToPublic(PhotosDto dto, Guid articleId)
-    {
-        var article = await repository.GetByIdWithIncludes(articleId);
-        if (article == null)
-            return Result.Failure("Article not found", ErrorCode.NotFound);
-        if (article.Visibility == VisibilityEnum.Private)
-            return Result.Failure("Incorrect visibility", ErrorCode.InvalidInput);
-        if (article.PhotosUrls != null)
-            return Result.Failure("Already added", ErrorCode.AlreadyExists);
-
-        article.PhotosUrls = dto.Photos;
-        
-        await repository.Update(article, articleId);
         
         return Result.Success();
     }
@@ -154,7 +132,6 @@ public class ArticleService(
         if (upArticle.Visibility == VisibilityEnum.Private)
         {
             upArticle.Description = null;
-            upArticle.PhotosUrls = null;
 
             var encryptedKeys = dto.EncryptedKeys.Select(mapper.Map<ArticleAccess>).ToList();
             foreach (var aa in encryptedKeys)
@@ -166,9 +143,6 @@ public class ArticleService(
         }
         else
         {
-            upArticle.EncryptedPreviewData = null;
-            upArticle.EncryptedData = null;
-
             if (article.Visibility == VisibilityEnum.Private)
             {
                 await accessRepository.DeleteForArticle(articleId);

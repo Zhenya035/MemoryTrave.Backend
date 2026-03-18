@@ -11,9 +11,18 @@ namespace MemoryTrave.Web.Controllers;
 public class ArticleController(IArticleService service, IWebHostEnvironment env) : BaseController(env)
 {
     [HttpGet("{articleId}")]
+    [AllowAnonymous]
     public async Task<IActionResult> Get(Guid articleId)
     {
-        var userId = GetCurrentUserId();
+        Guid userId;
+        try
+        {
+            userId = GetCurrentUserId();
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            userId = Guid.Empty;
+        }
         
         var result = await service.GetByIdWithIncludes(articleId, userId);
         return HandleResult(result);
@@ -37,17 +46,10 @@ public class ArticleController(IArticleService service, IWebHostEnvironment env)
         return HandleResult(result);
     }
     
-    [HttpPost("private/{articleId:guid}/photo")]
+    [HttpPost("private/{articleId:guid}/data")]
     public async Task<IActionResult> AddPhotoToPrivate(Guid articleId, [FromBody] AddPrivateArticleDto dto)
     {
         var result = await service.AddDataToPrivate(dto, articleId);
-        return HandleResult(result);
-    }
-
-    [HttpPost("public/{articleId:guid}/photo")]
-    public async Task<IActionResult> AddPublic(Guid articleId, [FromBody] PhotosDto dto)
-    {
-        var result = await service.AddPhotoToPublic(dto, articleId);
         return HandleResult(result);
     }
     

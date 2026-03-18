@@ -4,7 +4,6 @@ namespace MemoryTrave.Application.Dto.Requests.Article;
 
 public class AddPrivateArticleDto
 {
-    public string EncryptedPreviewData { get; set; } = string.Empty;
-    public string EncryptedData { get; set; } = string.Empty;
+    public string EncryptedDescription { get; set; } = string.Empty;
     public List<AddAccessDto> EncryptedKeys { get; set; } = [];
 }
