@@ -7,14 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Dto\" />
-      <Folder Include="Interfaces\" />
-      <Folder Include="Mapping\" />
-      <Folder Include="Services\" />
+      <ProjectReference Include="..\MemoryTrave.Domain\MemoryTrave.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MemoryTrave.Domain\MemoryTrave.Domain.csproj" />
+      <PackageReference Include="AutoMapper" Version="16.0.0" />
+      <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+      <PackageReference Include="FluentValidation" Version="12.1.1" />
+      <PackageReference Include="geohash-dotnet" Version="2.3.0" />
     </ItemGroup>
 
 </Project>

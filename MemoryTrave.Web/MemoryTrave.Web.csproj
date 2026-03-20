@@ -7,13 +7,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Contollers\" />
-      <Folder Include="Middlewares\" />
+      <ProjectReference Include="..\MemoryTrave.Application\MemoryTrave.Application.csproj" />
+      <ProjectReference Include="..\MemoryTrave.Infrastructure\MemoryTrave.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MemoryTrave.Application\MemoryTrave.Application.csproj" />
-      <ProjectReference Include="..\MemoryTrave.Infrastructure\MemoryTrave.Infrastructure.csproj" />
+      <PackageReference Include="FluentValidation" Version="12.1.1" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.3" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.4" />
     </ItemGroup>
 
 </Project>
