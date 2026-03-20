@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using MemoryTrave.Application.Interfaces.Jwt;
+using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Domain.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +18,7 @@ public class JwtService(IOptions<JwtSettings> settings) : IJwtService
         {
             new("id", user.Id.ToString()),
             new("email", user.Email),
+            new("username", user.Username),
             new("role", user.Role.ToString()),
         };
         

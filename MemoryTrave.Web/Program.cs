@@ -1,6 +1,4 @@
-using MemoryTrave.Application.Interfaces.Jwt;
 using MemoryTrave.Infrastructure;
-using MemoryTrave.Web;
 using MemoryTrave.Web.Extensions;
 using MemoryTrave.Web.Middlewares;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +14,8 @@ builder.Services.AddDbContext<MemoryTraveDbContext>(options =>
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddInfrastructureLayer();
+builder.Services.AddInfrastructureLayer(configuration);
 builder.Services.AddApplicationLayer();
-builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
 builder.Services.AddJwt(configuration);
 

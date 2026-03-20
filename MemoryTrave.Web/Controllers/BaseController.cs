@@ -1,51 +1,67 @@
 ﻿using System.Security.Claims;
-using FluentValidation.Results;
-using MemoryTrave.Application.Dto;
-using MemoryTrave.Domain.Exceptions;
+using MemoryTrave.Domain.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MemoryTrave.Web.Controllers;
 
 [ApiController]
-public abstract class BaseController : ControllerBase
+public abstract class BaseController(IWebHostEnvironment env) : ControllerBase
 {
-    protected IActionResult Ok<T>(T data, string? message = null) =>
-        base.Ok(new ApiResponse<T>
-        {
-            Success = true,
-            Data = data,
-            Message = message
-        });
+   protected IActionResult HandleResult<T>(Result<T> result)
+   {
+      if (result.IsSuccess)
+         return Ok(result.Data);
+      
+      var detail = env.IsDevelopment() ? result.Error : "An error occurred.";
+      return StatusCode((int)result.ErrorCode!, new ProblemDetails
+      {
+         Status = (int)result.ErrorCode,
+         Title = GetTitleForStatus((int)result.ErrorCode),
+         Detail = detail,
+         Instance = HttpContext.Request.Path
+      });
+   }
+   
+   protected IActionResult HandleResult(Result result)
+   {
+      if (result.IsSuccess)
+         return NoContent();
 
-    protected IActionResult Ok() =>
-        base.Ok(new ApiResponse { Success = true });
+      var detail = env.IsDevelopment() ? result.Error : "An error occurred.";
+      return StatusCode((int)result.ErrorCode, new ProblemDetails
+      {
+         Status = (int)result.ErrorCode,
+         Title = GetTitleForStatus((int)result.ErrorCode),
+         Detail = detail,
+         Instance = HttpContext.Request.Path
+      });
+   }
 
-    protected IActionResult Created<T>(T data) =>
-        StatusCode(201, new ApiResponse<T>
-        {
-            Success =  true,
-            Data = data
-        });
-
-
-    protected IActionResult BadRequest(ValidationResult result)
-    {
-        var formattedErrors = result.Errors.Select(e => e.ErrorMessage).ToList();
-        
-        return base.BadRequest(new ApiResponse
-        {
-            Success = false,
-            Message = "Validation failed",
-            Errors = formattedErrors
-        });
-    }
-
-    protected Guid GetCurrentUserId()
-    {
-        var claim = User.FindFirst("id") ?? User.FindFirst(ClaimTypes.NameIdentifier);
-        if (claim == null || !Guid.TryParse(claim.Value, out var userId))
-            throw new UnAuthorizedException("token");
-        
-        return userId;
-    }
+   protected Guid GetCurrentUserId()
+   {
+      var claim = User.FindFirst("id") ?? User.FindFirst(ClaimTypes.NameIdentifier);
+      if (claim == null || !Guid.TryParse(claim.Value, out var userId))
+         throw new UnauthorizedAccessException(); 
+      
+      return userId;
+   }
+   
+   protected string GetCurrentUsername()
+   {
+      var claim = User.FindFirst("username") ?? User.FindFirst(ClaimTypes.NameIdentifier);
+      if (claim == null || claim.Value == null)
+         throw new UnauthorizedAccessException(); 
+      
+      return claim.Value;
+   }
+   
+   private string GetTitleForStatus(int errorCode) => errorCode switch
+   {
+      400 => "Bad Request",
+      401 => "Unauthorized",
+      403 => "Forbidden",
+      404 => "Not Found",
+      409 => "Conflict",
+      _ => "Server Error"
+   };
 }

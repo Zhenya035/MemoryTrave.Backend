@@ -15,6 +15,8 @@ public class ArticleConfiguration : IEntityTypeConfiguration<Article>
             .IsRequired()
             .HasConversion<string>();
 
+        builder.Property(a => a.CreatedAt)
+            .IsRequired();
         builder.Property(a => a.LastChange)
             .IsRequired();
         

@@ -30,13 +30,13 @@ namespace MemoryTrave.Infrastructure.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EncryptedData")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EncryptedPreviewData")
+                    b.Property<string>("EncryptedDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastChange")
@@ -44,9 +44,6 @@ namespace MemoryTrave.Infrastructure.Migrations
 
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.PrimitiveCollection<string>("PhotosUrls")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Visibility")
                         .IsRequired()
@@ -108,15 +105,21 @@ namespace MemoryTrave.Infrastructure.Migrations
 
             modelBuilder.Entity("MemoryTrave.Domain.Models.Friendship", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("FriendId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("UserId", "FriendId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("FriendId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Friendships");
                 });
@@ -129,8 +132,8 @@ namespace MemoryTrave.Infrastructure.Migrations
 
                     b.Property<string>("Geohash")
                         .IsRequired()
-                        .HasMaxLength(12)
-                        .HasColumnType("nvarchar(12)");
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
@@ -142,7 +145,13 @@ namespace MemoryTrave.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Type", "Geohash")
+                        .HasDatabaseName("IX_Location_Type_Geohash");
 
                     b.ToTable("Locations");
                 });
@@ -250,17 +259,21 @@ namespace MemoryTrave.Infrastructure.Migrations
 
             modelBuilder.Entity("MemoryTrave.Domain.Models.Friendship", b =>
                 {
-                    b.HasOne("MemoryTrave.Domain.Models.User", null)
+                    b.HasOne("MemoryTrave.Domain.Models.User", "Friend")
                         .WithMany()
                         .HasForeignKey("FriendId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MemoryTrave.Domain.Models.User", null)
+                    b.HasOne("MemoryTrave.Domain.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Friend");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MemoryTrave.Domain.Models.Article", b =>

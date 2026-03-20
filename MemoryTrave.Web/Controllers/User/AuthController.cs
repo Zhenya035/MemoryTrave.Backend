@@ -1,19 +1,12 @@
-﻿using FluentValidation;
-using MemoryTrave.Application.Dto.Requests.User;
-using MemoryTrave.Application.Interfaces.User;
-using MemoryTrave.Application.Services.User;
+﻿using MemoryTrave.Application.Dto.Requests.User;
+using MemoryTrave.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MemoryTrave.Web.Controllers.User;
 
 [Route("users/auth")]
-public class AuthController(
-    IValidator<RegistrationDto> regValidator,
-    IValidator<AuthorizationDto> authValidator,
-    IValidator<AddKeysDto> addKeysValidator,
-    IRegistrationUseCase regUseCase,
-    IAuthorizationUseCase authUseCase) : BaseController
+public class AuthController(IUserService service, IWebHostEnvironment env) : BaseController(env)
 {
     [HttpGet("keys/private")]
     [Authorize]
@@ -21,45 +14,33 @@ public class AuthController(
     {
         var userId = GetCurrentUserId();
         
-        var keys = await authUseCase.GetPrivateKey(userId);
+        var result = await service.GetPrivateKey(userId);
         
-        return Ok(keys);
+        return HandleResult(result);
     }
     
     [HttpPost("registration")]
     public async Task<IActionResult> Registration([FromBody] RegistrationDto reg)
     {
-        var validResult = await regValidator.ValidateAsync(reg);
-        if(!validResult.IsValid)
-            return BadRequest(validResult);
-
-        var token = await regUseCase.Registration(reg);
-        return Created(token);
+        var result = await service.Registration(reg);
+        return HandleResult(result);
     }
 
     [HttpPost("authorization")]
     public async Task<IActionResult> Authorization([FromBody] AuthorizationDto auth)
     {
-        var validResult = await authValidator.ValidateAsync(auth);
-        if(!validResult.IsValid)
-            return BadRequest(validResult.Errors);
-
-        var token = await authUseCase.Authorization(auth);
-        return Ok(token);
+        var result = await service.Authorization(auth);
+        return HandleResult(result);
     }
 
     [HttpPut("add/keys")]
     [Authorize]
     public async Task<IActionResult> AddKeys([FromBody] AddKeysDto addKeys)
     {
-        var validResult = await addKeysValidator.ValidateAsync(addKeys);
-        if(!validResult.IsValid)
-            return BadRequest(validResult.Errors);
-
         var userId = GetCurrentUserId();
         
-        await regUseCase.AddKeys(addKeys, userId);
+        var result = await service.AddKeys(addKeys, userId);
         
-        return Ok();
+        return HandleResult(result);
     }
 }
