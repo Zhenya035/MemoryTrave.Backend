@@ -59,7 +59,7 @@ public class LocationService(
                var key = location.Articles
                     .FirstOrDefault(a => a.Id == article.Id)?
                     .EncryptedKeys?
-                    .FirstOrDefault()?
+                    .FirstOrDefault(k => k.UserId == userId)?
                     .EncryptedKey;
             
                 article.EncryptedKey = key;
