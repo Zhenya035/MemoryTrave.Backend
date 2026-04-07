@@ -6,7 +6,7 @@ namespace MemoryTrave.Application.Interfaces;
 
 public interface ILocationService
 {
-    public Task<Result<List<GetAllLocationDto>>> GetAll();
+    public Task<Result<List<GetAllLocationDto>>> GetAll(Guid userId);
     public Task<Result<GetLocationDto>> GetById(Guid locationId, Guid userId);
     
     public Task<Result> Add(AddAndUpdateLocationDto dto);

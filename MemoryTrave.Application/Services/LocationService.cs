@@ -13,6 +13,7 @@ namespace MemoryTrave.Application.Services;
 public class LocationService(
     ILocationRepository repository,
     IUserRepository userRepository,
+    IFriendshipRepository  friendshipRepository,
     IValidationService validationService,
     IMapper mapper) : ILocationService
 {
@@ -20,12 +21,41 @@ public class LocationService(
     private const int CityGeoHashSize = 6;
     private const int PointGeoHashSize = 8;
     
-    public async Task<Result<List<GetAllLocationDto>>> GetAll()
+    public async Task<Result<List<GetAllLocationDto>>> GetAll(Guid userId)
     {
         var locations = await repository.GetAll();
-        
-        var result =  mapper.Map<List<GetAllLocationDto>>(locations);
 
+        var friends = new List<Guid>();
+        if(userId != Guid.Empty)
+             friends = await friendshipRepository.GetAllFriendsIds(userId);
+        
+        var result = new List<GetAllLocationDto>();
+        
+        foreach (var loc in locations)
+        {
+            var locDto = mapper.Map<GetAllLocationDto>(loc);
+            
+            var authorIds = loc.Articles.Select(a => a.AuthorId).ToHashSet();
+
+            if (authorIds.Count == 0)
+                locDto.LocationContentState = LocationContentState.Empty;
+            else
+            {
+                var hasUser = authorIds.Contains(userId);
+                var hasFriends = authorIds.Any(friends.Contains);
+
+                locDto.LocationContentState = (hasUser, hasFriends) switch
+                {
+                    (true, true) => LocationContentState.MyAndFriendsArticles,
+                    (true, false) => LocationContentState.MyArticles,
+                    (false, true) => LocationContentState.FriendsArticles,
+                    _ => LocationContentState.OtherArticles
+                };
+            }
+            
+            result.Add(locDto);
+        }
+        
         return Result<List<GetAllLocationDto>>.Success(result);
     }
     

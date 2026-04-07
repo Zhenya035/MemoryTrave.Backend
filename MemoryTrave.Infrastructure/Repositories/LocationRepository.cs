@@ -10,6 +10,7 @@ public class LocationRepository(MemoryTraveDbContext context) : ILocationReposit
     public async Task<List<Location>> GetAll() =>
         await context.Locations
             .AsNoTracking()
+            .Include(l => l.Articles)
             .ToListAsync();
 
     public async Task<Location?> GetForUser(Guid locationId, Guid userId) =>
