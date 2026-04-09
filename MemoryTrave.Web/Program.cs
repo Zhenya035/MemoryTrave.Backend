@@ -42,6 +42,8 @@ builder.Services.AddSwaggerGen(o =>
 
 var app = builder.Build();
 
+app.UseMiddleware<EnforceHttpsMiddleware>();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
