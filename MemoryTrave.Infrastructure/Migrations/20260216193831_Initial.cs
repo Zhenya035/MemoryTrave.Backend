@@ -34,6 +34,7 @@ namespace MemoryTrave.Infrastructure.Migrations
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmailHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EncryptedPrivateKey = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PublicKey = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BlockedUsers = table.Column<string>(type: "nvarchar(max)", nullable: false),
