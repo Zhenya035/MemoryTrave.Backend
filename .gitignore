@@ -2,3 +2,4 @@
 obj/
 .idea/
 appsettings.Development.json
+.env
