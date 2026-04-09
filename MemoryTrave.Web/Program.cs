@@ -42,6 +42,22 @@ builder.Services.AddSwaggerGen(o =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<MemoryTraveDbContext>();
+        context.Database.Migrate(); 
+        Console.WriteLine("✅ Database migrated successfully");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Migration error: {ex.Message}");
+        throw;
+    }
+}
+
 app.UseMiddleware<EnforceHttpsMiddleware>();
 
 app.UseSwagger();

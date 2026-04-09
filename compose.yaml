@@ -1,0 +1,50 @@
+﻿services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: memorytrave-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+    networks:
+      - memorytrave-network
+  
+  memorytrave.web:
+    image: memorytrave.web
+    build:
+      context: .
+      dockerfile: MemoryTrave.Web/Dockerfile
+    container_name: memorytrave-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__MemoryTraveDbContext=Server=sqlserver,1433;Database=${DB_NAME};User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;Encrypt=False
+      
+      - JwtSettings__SecretKey=${JWT_SECRET_KEY}
+      - JwtSettings__Expires=00:20:00
+      - JwtSettings__Issuer=MemoryTrave.Backend
+      - JwtSettings__Audience=MemoryTrave.Frontend
+
+      - Cloudflare__AccountId=${CLOUDFLARE_ACCOUNT_ID}
+      - Cloudflare__AccessKeyId=${CLOUDFLARE_ACCESS_KEY_ID}
+      - Cloudflare__SecretAccessKey=${CLOUDFLARE_SECRET_ACCESS_KEY}
+      - Cloudflare__BucketName=${CLOUDFLARE_BUCKET_NAME}
+      - Cloudflare__PublicUrlBase=${CLOUDFLARE_PUBLIC_URL_BASE}
+    ports:
+      - "5000:8080"
+    depends_on:
+      - sqlserver
+    networks:
+      - memorytrave-network
+    restart: unless-stopped
+
+volumes:
+  sql-data:
+
+networks:
+  memorytrave-network:
+    driver: bridge
