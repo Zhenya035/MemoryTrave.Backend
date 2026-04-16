@@ -16,5 +16,11 @@ public class ArticleAccessMappingProfile : Profile
                 opt => opt.Ignore())
             .ForMember(mod => mod.ArticleId,
                 opt => opt.Ignore());
+        
+        CreateMap<AddAccessForFriendDto, ArticleAccess>()
+            .ForMember(mod => mod.Id,
+                opt => opt.Ignore())
+            .ForMember(mod => mod.UserId,
+                opt => opt.Ignore());
     }
 }
