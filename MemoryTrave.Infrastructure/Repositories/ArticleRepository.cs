@@ -1,4 +1,5 @@
-﻿using MemoryTrave.Domain.Interfaces;
+﻿using MemoryTrave.Domain.Enums;
+using MemoryTrave.Domain.Interfaces;
 using MemoryTrave.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,13 @@ public class ArticleRepository(MemoryTraveDbContext context) : IArticleRepositor
             .Include(a => a.Author)
             .Include(a => a.Location)
             .FirstOrDefaultAsync(a => a.Id == id);
+
+    public async Task<List<Article>> GetPrivate(Guid userId) =>
+        await context.Articles
+            .AsNoTracking()
+            .Include(a => a.EncryptedKeys)
+            .Where(a => a.AuthorId == userId && a.Visibility == VisibilityEnum.Private)
+            .ToListAsync();
 
     public async Task<Guid> Add(Article article)
     {
