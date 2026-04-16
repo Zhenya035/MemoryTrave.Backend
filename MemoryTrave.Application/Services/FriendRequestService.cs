@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MemoryTrave.Application.Dto;
 using MemoryTrave.Application.Dto.Responses.Friend;
 using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Domain.Common;
@@ -66,17 +67,17 @@ public class FriendRequestService(
         return Result.Success();
     }
 
-    public async Task<Result> Confirm(Guid userId, Guid requestId)
+    public async Task<Result<IdDto>> Confirm(Guid userId, Guid requestId)
     {
         var request =  await repository.GetById(requestId);
         if(request == null)
-            return Result.Failure("Request not found", ErrorCode.NotFound);
+            return Result<IdDto>.Failure("Request not found", ErrorCode.NotFound);
         if(request.ToUserId != userId)
-            return Result.Failure("User is not the recipient", ErrorCode.AccessDenied);
+            return Result<IdDto>.Failure("User is not the recipient", ErrorCode.AccessDenied);
 
         var friendshipExist = await friendshipRepository.ExistByUsers(request.FromUserId, request.ToUserId);
         if (friendshipExist)
-            return Result.Failure("Friendship already added", ErrorCode.AlreadyExists);
+            return Result<IdDto>.Failure("Friendship already added", ErrorCode.AlreadyExists);
 
         var friendship = new Friendship
         {
@@ -87,7 +88,12 @@ public class FriendRequestService(
         await friendshipRepository.Add(friendship);
         
         await repository.Delete(requestId);
-        return Result.Success();
+        var result = new IdDto()
+        {
+            Id = request.FromUserId,
+        };
+        
+        return Result<IdDto>.Success(result);
     }
 
     public async Task<Result> Cancel(Guid userId, Guid requestId)
