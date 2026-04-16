@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MemoryTrave.Application.Dto;
-using MemoryTrave.Application.Dto.Photo;
 using MemoryTrave.Application.Dto.Requests.Article;
+using MemoryTrave.Application.Dto.Requests.Article.Access;
 using MemoryTrave.Application.Dto.Responses.Article;
 using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Domain.Common;
@@ -15,6 +15,7 @@ public class ArticleService(
     IArticleRepository repository,
     ILocationRepository locationRepository,
     IArticleAccessRepository accessRepository,
+    IUserRepository userRepository,
     IMapper mapper, 
     IValidationService validationService) : IArticleService
 {
@@ -45,6 +46,26 @@ public class ArticleService(
         privateArticleDto.EncryptedKey = access.EncryptedKey;
         
         return Result<GetArticleDto>.Success(privateArticleDto);
+    }
+
+    public async Task<Result<List<GetPrivateForFriend>>> GetPrivate(Guid userId)
+    {
+        var articles = await repository.GetPrivate(userId);
+
+        var result = new List<GetPrivateForFriend>();
+
+        foreach (var article in articles)
+        {
+            var newResult = new GetPrivateForFriend
+            {
+                ArticleId = article.Id,
+                EncryptedKey = article.EncryptedKeys.First(eK => eK.UserId == userId).EncryptedKey
+            };
+
+            result.Add(newResult);
+        }
+        
+        return Result<List<GetPrivateForFriend>>.Success(result);
     }
 
     public async Task<Result<IdDto>> AddPrivate(Guid locationId, Guid authorId)
@@ -111,6 +132,28 @@ public class ArticleService(
         }
         await accessRepository.AddList(encryptedKeys);
         
+        return Result.Success();
+    }
+
+    public async Task<Result> AddAccess(List<AddAccessForFriendDto> dto, Guid userId)
+    {
+        var isValid = await validationService.Validate(dto);
+        if (!isValid.IsSuccess && isValid.Error != null)
+            return Result.Failure(isValid.Error, ErrorCode.InvalidInput);
+
+        var userIsExist = await userRepository.ExistsById(userId);
+        if (!userIsExist)
+            return Result.Failure("User not found", ErrorCode.NotFound);
+
+        var encryptedKeys = dto.Select(access => mapper.Map<ArticleAccess>(access)).ToList();
+
+        foreach (var encryptedKey in encryptedKeys)
+        {
+            encryptedKey.Id = Guid.NewGuid();
+            encryptedKey.UserId = userId;
+        }
+
+        await accessRepository.AddList(encryptedKeys);
         return Result.Success();
     }
 
