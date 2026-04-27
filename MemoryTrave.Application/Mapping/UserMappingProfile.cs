@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MemoryTrave.Application.Dto.Requests.User;
+using MemoryTrave.Application.Dto.Responses.Friend;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Domain.Models;
 
@@ -20,6 +21,11 @@ public class UserMappingProfile : Profile
                 opt => opt.MapFrom(src =>
                     src.Articles));
         CreateMap<User, GetUserDto>();
+
+        CreateMap<User, GetOtherDto>()
+            .ForMember(dto => dto.Name,
+                opt => opt.MapFrom(src =>
+                    src.Username));
 
         CreateMap<RegistrationDto, User>()
             .ForMember(model => model.Id, 

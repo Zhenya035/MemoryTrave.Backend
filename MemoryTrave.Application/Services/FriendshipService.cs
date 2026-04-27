@@ -12,18 +12,18 @@ public class FriendshipService(
     IUserRepository userRepository,
     IMapper mapper) : IFriendshipService
 {
-    public async Task<Result<List<GetFriendDto>>> GetAll(Guid userId)
+    public async Task<Result<List<GetOtherDto>>> GetAll(Guid userId)
     {
         var isExist = await userRepository.ExistsById(userId);
         if (!isExist)
-            return Result<List<GetFriendDto>>.Failure("User not found", ErrorCode.NotFound);
+            return Result<List<GetOtherDto>>.Failure("User not found", ErrorCode.NotFound);
             
         var friendship = await repository.GetAllFriends(userId);
         
-        var result = mapper.Map<List<GetFriendDto>>(friendship,
+        var result = mapper.Map<List<GetOtherDto>>(friendship,
             opt => opt.Items["UserId"] = userId);
         
-        return Result<List<GetFriendDto>>.Success(result);
+        return Result<List<GetOtherDto>>.Success(result);
     }
 
     public async Task<Result<List<GetPublicKeysDto>>> GetPublicKeys(Guid userId)

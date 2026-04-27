@@ -8,8 +8,8 @@ public class FriendshipMappingProfile : Profile
 {
     public FriendshipMappingProfile()
     {
-        CreateMap<Friendship, GetFriendDto>()
-            .ForMember(dto => dto.FriendName,
+        CreateMap<Friendship, GetOtherDto>()
+            .ForMember(dto => dto.Name,
                 opt => opt.MapFrom((src, dest, member, context) =>
                 {
                     var currentUserId = (Guid)context.Items["UserId"];
@@ -17,6 +17,15 @@ public class FriendshipMappingProfile : Profile
                     return src.UserId == currentUserId
                         ? src.Friend.Username
                         : src.User.Username;
+                }))
+            .ForMember(dto => dto.Email,
+                opt => opt.MapFrom((src, dest, member, context) =>
+                {
+                    var currentUserId = (Guid)context.Items["UserId"];
+
+                    return src.UserId == currentUserId
+                        ? src.Friend.Email
+                        : src.User.Email;
                 }));
     }
 }

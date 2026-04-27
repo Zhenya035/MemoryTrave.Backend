@@ -2,6 +2,7 @@
 using MemoryTrave.Application.Dto;
 using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses;
+using MemoryTrave.Application.Dto.Responses.Friend;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Application.Interfaces;
 using MemoryTrave.Domain.Common;
@@ -171,19 +172,19 @@ public class UserService(
         return Result<GetPublicKeysDto>.Success(result);
     }
 
-    public async Task<Result<List<GetUserDto>>> GetUsersWithoutMe(Guid userId)
+    public async Task<Result<List<GetOtherDto>>> GetUsersWithoutMe(Guid userId)
     {
         var user = await userRepository.GetById(userId);
         if (user == null)
-            return Result<List<GetUserDto>>.Failure("User not found", ErrorCode.NotFound);
+            return Result<List<GetOtherDto>>.Failure("User not found", ErrorCode.NotFound);
         
         var users = await userRepository.GetUsersWithoutMe(userId);
 
         var result = users.Where(u => !user.BlockedUsers.Contains(u.Id)).ToList();
         
-        var resulDto = mapper.Map<List<GetUserDto>>(result);
+        var resulDto = mapper.Map<List<GetOtherDto>>(result);
         
-        return Result<List<GetUserDto>>.Success(resulDto);
+        return Result<List<GetOtherDto>>.Success(resulDto);
     }
 
     public async Task<Result> Block(ListIdDto blockIds, Guid userId)

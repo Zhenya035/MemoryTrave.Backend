@@ -23,7 +23,7 @@ public class FriendRequestController(
         {
             DirectionEnum.Incoming => await service.GetAllToUserId(userId),
             DirectionEnum.Outgoing => await service.GetAllFromUserId(userId),
-            _ => new Result<List<GetFriendDto>>(false, null, "Invalid query", ErrorCode.InvalidInput)
+            _ => new Result<List<GetOtherDto>>(false, null, "Invalid query", ErrorCode.InvalidInput)
         };
 
         return HandleResult(result);
