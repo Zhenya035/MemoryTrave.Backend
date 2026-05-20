@@ -6,6 +6,7 @@ public interface IArticleRepository
 {
     public Task<Article?> GetByIdWithIncludes(Guid id);
     public Task<List<Article>> GetPrivate(Guid userId);
+    public Task<List<Guid>> GetArticlesIdsFromUser(Guid userId);
     
     public Task<Guid> Add(Article article);
    

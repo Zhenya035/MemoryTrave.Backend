@@ -22,6 +22,13 @@ public class ArticleRepository(MemoryTraveDbContext context) : IArticleRepositor
             .Where(a => a.AuthorId == userId && a.Visibility == VisibilityEnum.Private)
             .ToListAsync();
 
+    public async Task<List<Guid>> GetArticlesIdsFromUser(Guid userId) =>
+        await context.Articles
+            .AsNoTracking()
+            .Where(a => a.AuthorId == userId && a.Visibility == VisibilityEnum.Private)
+            .Select(a => a.Id)
+            .ToListAsync();
+
     public async Task<Guid> Add(Article article)
     {
         var newArticle = await context.Articles.AddAsync(article);
