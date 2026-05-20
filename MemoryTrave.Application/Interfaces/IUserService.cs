@@ -23,6 +23,7 @@ public interface IUserService
     public Task<Result<List<GetUserDto>>> GetBlockUsers(Guid userId);
 
     public Task<Result<GetPublicKeysDto>> GetPublicKey(Guid userId);
+    public Task<Result<List<GetPublicKeysDto>>> GetPublicKey(List<Guid> userIds);
     
     public Task<Result<List<GetOtherDto>>> GetUsersWithoutMe(Guid userId);
     public Task<Result> Block(ListIdDto blockIds, Guid userId);

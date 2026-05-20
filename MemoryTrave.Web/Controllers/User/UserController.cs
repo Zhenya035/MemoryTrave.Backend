@@ -33,6 +33,13 @@ public class UserController(IUserService service, IWebHostEnvironment env) : Bas
         var result = await service.GetPublicKey(userId);
         return HandleResult(result);
     }
+    
+    [HttpPost("users/keys/public")]
+    public async Task<IActionResult> GetPublicKeyByIds([FromBody] List<Guid> userIds)
+    {
+        var result = await service.GetPublicKey(userIds);
+        return HandleResult(result);
+    }
 
     [HttpPut("block")]
     public async Task<IActionResult> Block(ListIdDto userIds)

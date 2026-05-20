@@ -15,6 +15,7 @@ namespace MemoryTrave.Application.Services;
 public class UserService(
     IUserRepository userRepository,
     IFriendshipRepository friendRepository,
+    IFriendRequestRepository requestRepository,
     IJwtService jwtService,
     IMapper mapper,
     IValidationService validationService) : IUserService
@@ -172,6 +173,25 @@ public class UserService(
         return Result<GetPublicKeysDto>.Success(result);
     }
 
+    public async Task<Result<List<GetPublicKeysDto>>> GetPublicKey(List<Guid> userIds)
+    {
+        var result = new List<GetPublicKeysDto>();
+        foreach (var id in userIds)
+        {
+            var user = await userRepository.GetById(id);
+            if (user == null)
+                return Result<List<GetPublicKeysDto>>.Failure("Some user not found", ErrorCode.NotFound);
+
+            result.Add(new GetPublicKeysDto
+            {
+                UserId = user.Id,
+                PublicKey = user.PublicKey,
+            });
+        }
+
+        return Result<List<GetPublicKeysDto>>.Success(result);
+    }
+
     public async Task<Result<List<GetOtherDto>>> GetUsersWithoutMe(Guid userId)
     {
         var user = await userRepository.GetById(userId);
@@ -179,8 +199,12 @@ public class UserService(
             return Result<List<GetOtherDto>>.Failure("User not found", ErrorCode.NotFound);
         
         var users = await userRepository.GetUsersWithoutMe(userId);
+        var friendsIds = await friendRepository.GetAllFriendsIds(userId);
+        var requestsIds = await requestRepository.GetAllRequestIds(userId);
 
-        var result = users.Where(u => !user.BlockedUsers.Contains(u.Id)).ToList();
+        var result = users.Where(u => !user.BlockedUsers.Contains(u.Id) 
+                                      && !friendsIds.Contains(u.Id)
+                                      && !requestsIds.Contains(u.Id)).ToList();
         
         var resulDto = mapper.Map<List<GetOtherDto>>(result);
         
