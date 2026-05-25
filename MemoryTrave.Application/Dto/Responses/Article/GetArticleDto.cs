@@ -9,6 +9,7 @@ public class GetArticleDto
     public DateTime LastChange { get; set; }
     public DateTime CreatedAt{ get; set; }
     public string AuthorName { get; set; } = string.Empty;
+    public Guid AuthorId { get; set; }
     public string LocationName { get; set; } = string.Empty;
     
     public string? EncryptedDescription { get; set; }
