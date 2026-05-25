@@ -45,6 +45,7 @@ public class UserService(
         var resultDto = new AuthorizationResponseDto()
         {
             JwtToken = token,
+            UserId = user.Id
         };
         var response = Result<AuthorizationResponseDto>.Success(resultDto);
         
@@ -94,6 +95,7 @@ public class UserService(
         var resultDto = new AuthorizationResponseDto()
         {
             JwtToken = token,
+            UserId = user.Id
         };
         var response = Result<AuthorizationResponseDto>.Success(resultDto);
         
