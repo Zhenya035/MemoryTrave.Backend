@@ -38,6 +38,13 @@ public class ArticleController(IArticleService service, IWebHostEnvironment env)
         return HandleResult(result);
     }
 
+    [HttpGet("{articleId:guid}/author")]
+    public async Task<IActionResult> GetAuthor(Guid articleId)
+    {
+        var result = await service.GetAuthor(articleId);
+        return HandleResult(result);
+    }
+
     [HttpPost("access/{userId:guid}")]
     public async Task<IActionResult> AddAccess(Guid userId, [FromBody] List<AddAccessForFriendDto> dto)
     {

@@ -68,6 +68,18 @@ public class ArticleService(
         return Result<List<GetPrivateForFriend>>.Success(result);
     }
 
+    public async Task<Result<IdDto>> GetAuthor(Guid articleId)
+    {
+        var isExist = await repository.IsExists(articleId);
+        if (!isExist)
+            return Result<IdDto>.Failure("Article not found", ErrorCode.NotFound);
+        
+        var article = await repository.GetByIdWithIncludes(articleId);
+        var result = new IdDto { Id = article.AuthorId };
+        
+        return Result<IdDto>.Success(result);
+    }
+
     public async Task<Result<IdDto>> AddPrivate(Guid locationId, Guid authorId)
     {
         var isExists = await locationRepository.Exists(locationId);
