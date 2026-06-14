@@ -39,6 +39,7 @@ public class ArticleController(IArticleService service, IWebHostEnvironment env)
     }
 
     [HttpGet("{articleId:guid}/author")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAuthor(Guid articleId)
     {
         var result = await service.GetAuthor(articleId);
