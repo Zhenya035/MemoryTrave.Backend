@@ -112,31 +112,38 @@ public class CloudStorageService(
 
     public async Task<Result<List<string>>> DownloadPhotoAsync(string author, Guid articleId)
     {
-        var client = clientFactory.CreateClient();
-        var prefix = $"{author}/{articleId}/";
-
-        var listResponse = await client.ListObjectsV2Async(new ListObjectsV2Request
+        try
         {
-            BucketName = settings.Value.BucketName,
-            Prefix = prefix
-        });
+            var client = clientFactory.CreateClient();
+            var prefix = $"{author}/{articleId}/";
 
-        var photos = new List<string>();
-
-        foreach (var obj in listResponse.S3Objects.OrderBy(o => o.Key))
-        {
-            using var response = await client.GetObjectAsync(new GetObjectRequest
+            var listResponse = await client.ListObjectsV2Async(new ListObjectsV2Request
             {
                 BucketName = settings.Value.BucketName,
-                Key = obj.Key
+                Prefix = prefix
             });
 
-            using var ms = new MemoryStream();
-            await response.ResponseStream.CopyToAsync(ms);
-            photos.Add(Convert.ToBase64String(ms.ToArray()));
-        }
+            var photos = new List<string>();
 
-        return Result<List<string>>.Success(photos);
+            foreach (var obj in listResponse.S3Objects.OrderBy(o => o.Key))
+            {
+                using var response = await client.GetObjectAsync(new GetObjectRequest
+                {
+                    BucketName = settings.Value.BucketName,
+                    Key = obj.Key
+                });
+
+                using var ms = new MemoryStream();
+                await response.ResponseStream.CopyToAsync(ms);
+                photos.Add(Convert.ToBase64String(ms.ToArray()));
+            }
+
+            return Result<List<string>>.Success(photos);
+        }
+        catch (ArgumentNullException)
+        {
+            return Result<List<string>>.Success(new List<string>());
+        }
     }
 
     private string ExtractKey(string input)
