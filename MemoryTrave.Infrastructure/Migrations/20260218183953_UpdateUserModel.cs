@@ -10,6 +10,11 @@ namespace MemoryTrave.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.RenameColumn(
+                name: "EmailHash",
+                table: "Users",
+                newName: "Email");
+            
             migrationBuilder.AlterColumn<string>(
                 name: "Email",
                 table: "Users",
@@ -39,6 +44,11 @@ namespace MemoryTrave.Infrastructure.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(450)");
+            
+            migrationBuilder.RenameColumn(
+                name: "Email",
+                table: "Users",
+                newName: "EmailHash");
         }
     }
 }

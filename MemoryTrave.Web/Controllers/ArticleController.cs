@@ -1,5 +1,6 @@
 ﻿using MemoryTrave.Application.Dto.Photo;
 using MemoryTrave.Application.Dto.Requests.Article;
+using MemoryTrave.Application.Dto.Requests.Article.Access;
 using MemoryTrave.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,30 @@ public class ArticleController(IArticleService service, IWebHostEnvironment env)
         }
         
         var result = await service.GetByIdWithIncludes(articleId, userId);
+        return HandleResult(result);
+    }
+
+    [HttpGet("private")]
+    public async Task<IActionResult> GetPrivateArticles()
+    {
+        var userId = GetCurrentUserId();
+        
+        var result = await service.GetPrivate(userId);
+        return HandleResult(result);
+    }
+
+    [HttpGet("{articleId:guid}/author")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetAuthor(Guid articleId)
+    {
+        var result = await service.GetAuthor(articleId);
+        return HandleResult(result);
+    }
+
+    [HttpPost("access/{userId:guid}")]
+    public async Task<IActionResult> AddAccess(Guid userId, [FromBody] List<AddAccessForFriendDto> dto)
+    {
+        var result = await service.AddAccess(dto, userId);
         return HandleResult(result);
     }
 

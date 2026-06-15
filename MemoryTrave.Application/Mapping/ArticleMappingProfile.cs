@@ -27,6 +27,9 @@ public class ArticleMappingProfile : Profile
             .ForMember(dto => dto.AuthorName,
                 opt => opt.MapFrom(src =>
                     src.Author.Username))
+            .ForMember(dto => dto.AuthorId,
+                opt => opt.MapFrom(src =>
+                    src.Author.Id))
             .ForMember(dto => dto.LocationName,
                 opt => opt.MapFrom(src =>
                     src.Location.Name))

@@ -14,7 +14,9 @@ public class LocationMappingProfile : Profile
                 opt => opt.MapFrom(
                     src => src.Articles));
 
-        CreateMap<Location, GetAllLocationDto>();
+        CreateMap<Location, GetAllLocationDto>()
+            .ForMember(dto => dto.LocationContentState,
+                opt => opt.Ignore());
 
         CreateMap<AddAndUpdateLocationDto, Location>()
             .ForMember(mod => mod.Id,

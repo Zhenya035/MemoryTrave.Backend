@@ -16,6 +16,15 @@ public class FriendshipController(IWebHostEnvironment env, IFriendshipService se
         var result = await service.GetAll(userId);
         return HandleResult(result);
     }
+    
+    [HttpGet("id")]
+    public async Task<IActionResult> GetAllWithFriendId()
+    {
+        var userId = GetCurrentUserId();
+        
+        var result = await service.GetAllWithFriendId(userId);
+        return HandleResult(result);
+    }
 
     [HttpGet("keys")]
     public async Task<IActionResult> GetFriendsKeys()

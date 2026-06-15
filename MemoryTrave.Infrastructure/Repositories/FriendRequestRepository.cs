@@ -20,6 +20,13 @@ public class FriendRequestRepository(MemoryTraveDbContext context) : IFriendRequ
             .Where(fr => fr.FromUserId == userId)
             .ToListAsync();
 
+    public async Task<List<Guid>> GetAllRequestIds(Guid userId) =>
+        await context.FriendRequests
+            .AsNoTracking()
+            .Where(fr => fr.FromUserId == userId || fr.ToUserId == userId)
+            .Select(fr => fr.FromUserId == userId ? fr.ToUserId : fr.FromUserId)
+            .ToListAsync();
+
     public async Task<FriendRequest?> GetById(Guid requestId) =>
         await context.FriendRequests
             .AsNoTracking()

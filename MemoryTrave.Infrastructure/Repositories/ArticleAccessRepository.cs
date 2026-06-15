@@ -44,6 +44,12 @@ public class ArticleAccessRepository(MemoryTraveDbContext context) : IArticleAcc
             .Where(a => a.ArticleId == articleId)
             .ExecuteDeleteAsync();
 
+    public async Task DeleteForUser(List<Guid> articleIds, Guid userId) =>
+        await context.ArticleAccesses
+            .Where(a => articleIds.Contains(a.ArticleId) && a.UserId == userId)
+            .ExecuteDeleteAsync();
+
+
     public async Task<bool> Exists(Guid articleId, Guid userId) =>
     await context.ArticleAccesses
         .AsNoTracking()

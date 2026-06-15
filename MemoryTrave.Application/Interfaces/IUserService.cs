@@ -1,6 +1,8 @@
 ﻿using MemoryTrave.Application.Dto;
+using MemoryTrave.Application.Dto.Requests.Article.Access;
 using MemoryTrave.Application.Dto.Requests.User;
 using MemoryTrave.Application.Dto.Responses;
+using MemoryTrave.Application.Dto.Responses.Friend;
 using MemoryTrave.Application.Dto.Responses.User;
 using MemoryTrave.Domain.Common;
 
@@ -21,8 +23,9 @@ public interface IUserService
     public Task<Result<List<GetUserDto>>> GetBlockUsers(Guid userId);
 
     public Task<Result<GetPublicKeysDto>> GetPublicKey(Guid userId);
+    public Task<Result<List<GetPublicKeysDto>>> GetPublicKey(List<Guid> userIds);
     
-    public Task<Result<List<GetUserDto>>> GetUsersWithoutMe(Guid userId);
+    public Task<Result<List<GetOtherDto>>> GetUsersWithoutMe(Guid userId);
     public Task<Result> Block(ListIdDto blockIds, Guid userId);
     public Task<Result> Unblock(ListIdDto unblockIds, Guid userId);
     public Task<Result> Delete(Guid userId);

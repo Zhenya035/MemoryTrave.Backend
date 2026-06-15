@@ -15,7 +15,17 @@ public class LocationController(
     [AllowAnonymous]
     public async Task<IActionResult> GetAll()
     {
-        var result = await service.GetAll();
+        Guid userId;
+        try
+        {
+            userId = GetCurrentUserId();
+        }
+        catch (UnauthorizedAccessException)
+        {
+            userId = Guid.Empty;
+        }
+        
+        var result = await service.GetAll(userId);
         return HandleResult(result);
     }
 
