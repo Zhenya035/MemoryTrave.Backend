@@ -2,5 +2,5 @@
 
 public class ListIdDto
 {
-    public List<Guid> Ids { get; set; }
+    public List<Guid> Ids { get; set; } = [];
 }

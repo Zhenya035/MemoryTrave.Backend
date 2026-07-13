@@ -12,6 +12,7 @@ public interface IArticleService
     public Task<Result<GetArticleDto>> GetByIdWithIncludes(Guid articleId, Guid userId);
     public Task<Result<List<GetPrivateForFriend>>> GetPrivate(Guid userId);
     public Task<Result<IdDto>> GetAuthor(Guid articleId);
+    public Task<Result<List<IdDto>>> GetFriends(Guid articleId, Guid userId);
     
     public Task<Result<IdDto>> AddPrivate(Guid locationId, Guid authorId);
     public Task<Result<IdDto>> AddPublic(AddPublicArticleDto dto, Guid authorId);

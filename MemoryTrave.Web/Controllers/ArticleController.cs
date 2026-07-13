@@ -29,6 +29,23 @@ public class ArticleController(IArticleService service, IWebHostEnvironment env)
         return HandleResult(result);
     }
 
+    [HttpGet("{articleId:guid}/friends")]
+    public async Task<IActionResult> GetFriends(Guid articleId)
+    {
+        Guid userId;
+        try
+        {
+            userId = GetCurrentUserId();
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            userId = Guid.Empty;
+        }
+        
+        var result = await service.GetFriends(articleId, userId);
+        return HandleResult(result);
+    }
+
     [HttpGet("private")]
     public async Task<IActionResult> GetPrivateArticles()
     {

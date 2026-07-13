@@ -80,6 +80,22 @@ public class ArticleService(
         return Result<IdDto>.Success(result);
     }
 
+    public async Task<Result<List<IdDto>>> GetFriends(Guid articleId, Guid userId)
+    {
+        var isExist = await repository.IsExists(articleId);
+        if (!isExist)
+            return Result<List<IdDto>>.Failure("Article not found", ErrorCode.NotFound);
+        
+        var accessIds = await accessRepository.GetFriendsByArticle(articleId);
+        
+        var result = new List<IdDto>();
+        foreach (var accessId in accessIds.Where(accessId => accessId != userId))
+            result.Add(new IdDto{Id = accessId});
+        
+        
+        return Result<List<IdDto>>.Success(result);
+    }
+
     public async Task<Result<IdDto>> AddPrivate(Guid locationId, Guid authorId)
     {
         var isExists = await locationRepository.Exists(locationId);
@@ -201,6 +217,7 @@ public class ArticleService(
         {
             if (article.Visibility == VisibilityEnum.Private)
             {
+                upArticle.EncryptedDescription = null;
                 await accessRepository.DeleteForArticle(articleId);
             }
         }

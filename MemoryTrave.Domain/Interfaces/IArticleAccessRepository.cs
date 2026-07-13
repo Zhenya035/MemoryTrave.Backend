@@ -4,6 +4,8 @@ namespace MemoryTrave.Domain.Interfaces;
 
 public interface IArticleAccessRepository
 {
+    public Task<List<Guid>> GetFriendsByArticle(Guid articleId);
+    
     public Task AddList(List<ArticleAccess> articleAccesses);
     
     public Task Sync(Guid articleId, List<ArticleAccess> articleAccesses);

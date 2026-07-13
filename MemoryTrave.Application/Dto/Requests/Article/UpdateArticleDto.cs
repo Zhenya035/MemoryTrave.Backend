@@ -11,5 +11,4 @@ public class UpdateArticleDto
     public List<AddAccessDto>? EncryptedKeys { get; set; }
     
     public string? Description { get; set; }
-    public List<string>? PhotosUrls { get; set; }
 }

@@ -6,6 +6,13 @@ namespace MemoryTrave.Infrastructure.Repositories;
 
 public class ArticleAccessRepository(MemoryTraveDbContext context) : IArticleAccessRepository
 {
+    public async Task<List<Guid>> GetFriendsByArticle(Guid articleId) =>
+        await context.ArticleAccesses
+            .AsNoTracking()
+            .Where(aa => aa.ArticleId == articleId)
+            .Select(aa => aa.UserId)
+            .ToListAsync();
+
     public async Task AddList(List<ArticleAccess> articleAccesses)
     {
         await context.ArticleAccesses

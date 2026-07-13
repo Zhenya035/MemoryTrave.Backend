@@ -31,15 +31,5 @@ public class UpdateArticleDtoValidator : AbstractValidator<UpdateArticleDto>
             .NotEmpty()
             .When(a => a.Visibility == VisibilityEnum.Public)
             .WithMessage("Description is required for public article");
-        
-        RuleFor(a => a.PhotosUrls)
-            .NotEmpty()
-            .When(a => a.Visibility == VisibilityEnum.Public)
-            .WithMessage("Photos urls is required for public article");
-        
-        RuleFor(a => a.PhotosUrls)
-            .Must(urls => urls.All(u => Uri.IsWellFormedUriString(u, UriKind.Absolute)))
-            .When(a => a.PhotosUrls != null  && a.PhotosUrls.Count != 0)
-            .WithMessage("Invalid photo URL format");;
     }
 }
